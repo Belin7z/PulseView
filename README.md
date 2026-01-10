@@ -66,38 +66,23 @@ Mova o mouse sobre o relógio para ver o efeito parallax 3D em ação!
 
 ---
 
-## 📝 Notas de Atualização
+## Atualizações
 
-### Data: 10 de Janeiro de 2026
+### v1.1 - Jan 10, 2025
 
-**Melhorias Implementadas:**
+> Aqui a galera vê as mudanças que rolaram no projeto
 
-- ✨ Reformulação completa do README.md com estrutura profissional
-- 📌 Adição de seção "Notas de Atualização" com data e mudanças
-- 🎨 Inclusão de emojis para melhor visualização e organização
-- 📚 Seções bem definidas com separadores visuais (---)
-- 💡 Documentação mais clara e detalhada
-- 🔧 Instruções passo a passo para usar o projeto
-- 🎯 Melhor apresentação profissional do projeto
+**index.html:**
+- Add: Estrutura HTML completa com suporte a parallax 3D
+- Add: Sistema de atualização de hora em tempo real com requestAnimationFrame()
+- Add: Event listeners para mouse movement (parallax effect)
+- Fix: Correção de renderização em diferentes resoluções
+- Upd: Melhorias de performance no loop de animação
 
----
-
-## 👤 Autor
-
-**Belin7z** - Desenvolvedor em aprendizado
-
----
-
-## 📄 Licença
-
-Este projeto é de uso livre para fins educacionais e de estudos.
-
----
-
-## 🔗 Links Úteis
-
-- **Repositório:** [GitHub - hello-world](https://github.com/Belin7z/hello-world)
-- **Demo Online:** [GitHub Pages](https://belin7z.github.io/hello-world/)
+**Gerais:**
+- Add: README.md profissional com documentação completa
+- Add: Sections bem definidas (Descrição, Características, Objetivo, etc)
+- Upd: Padrão de documentação mais legível e organizado
 
 ---
 
