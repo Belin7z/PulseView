@@ -71,19 +71,12 @@ Mova o mouse sobre o relógio para ver o efeito parallax 3D em ação!
 
 ### v1.1 - Jan 10, 2025
 
-> Aqui a galera vê as mudanças que rolaram no projeto
-
 **index.html:**
-- Add: Estrutura HTML completa com suporte a parallax 3D
-- Add: Sistema de atualização de hora em tempo real com requestAnimationFrame()
-- Add: Event listeners para mouse movement (parallax effect)
-- Fix: Correção de renderização em diferentes resoluções
-- Upd: Melhorias de performance no loop de animação
-
-**Gerais:**
-- Add: README.md profissional com documentação completa
-- Add: Sections bem definidas (Descrição, Características, Objetivo, etc)
-- Upd: Padrão de documentação mais legível e organizado
+- Estrutura HTML completa com suporte a parallax 3D
+->> {Add: Sistema de atualização de hora em tempo real com requestAnimationFrame()};
+->> }Add: Event listeners para mouse movement (parallax effect)};
+->> {Fix: Correção de renderização em diferentes resoluções};
+->> {Upd: Melhorias de performance no loop de animação};
 
 ---
 
