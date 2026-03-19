@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello World</title>
+  <title>Relógio Imersivo 3D</title>
+  <!-- Fonte Moderna -->
+  <link href="https://fonts.googleapis.com" rel="stylesheet">
+  
   <style>
+    :root {
+      /* Cores dinâmicas que podem ser alteradas via JS */
+      --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --accent-color: #00d2ff;
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
     }
 
     body {
@@ -25,107 +28,194 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      transition: background 2s ease; /* Transição suave de cores por horário */
       overflow: hidden;
+      color: white;
+    }
+
+    .container {
+      text-align: center;
+      perspective: 1500px;
     }
 
     h1 {
-      font-size: 3.5rem;
-      color: white;
-      margin-bottom: 3rem;
-      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      letter-spacing: 2px;
-      font-weight: 700;
-      animation: fadeInDown 0.8s ease-out;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 8px;
+      margin-bottom: 2rem;
+      opacity: 0.6;
+      font-weight: 300;
+      animation: fadeIn 1.5s ease-out;
+    }
+
+    /* O Cartão do Relógio */
+    #clock-card {
+      position: relative;
+      padding: 50px 80px;
+      border-radius: 30px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: box-shadow 0.3s ease;
+    }
+
+    /* Brilho que segue o mouse */
+    #clock-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 30px;
+      background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.15) 0%, transparent 80%);
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    #clock-card:hover::before {
+      opacity: 1;
     }
 
     #hora {
-      font-size: 4rem;
-      color: #ffffff;
-      font-weight: bold;
-      font-family: 'Courier New', monospace;
-      cursor: pointer;
-      display: inline-block;
-      padding: 30px 60px;
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(12px);
-      border: 1.5px solid rgba(255, 255, 255, 0.25);
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      transition: all 0.1s ease-out;
-      will-change: transform;
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-      letter-spacing: 3px;
+      font-size: 5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 10px;
+      text-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
 
-    #hora:hover {
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.45);
+    #data {
+      font-size: 1.1rem;
+      opacity: 0.8;
+      letter-spacing: 2px;
     }
 
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    /* Badge de Formato (12h/24h) */
+    .format-badge {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 0.7rem;
+      background: rgba(255,255,255,0.1);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 0.6; transform: translateY(0); }
+    }
+
+    /* Responsividade básica */
+    @media (max-width: 600px) {
+      #hora { font-size: 3rem; }
+      #clock-card { padding: 30px 40px; }
     }
   </style>
 </head>
 <body>
-  <h1>Hello World!</h1>
-  <p id="hora"></p>
+
+  <div class="container">
+    <h1>System Time</h1>
+    
+    <div id="clock-card">
+      <span class="format-badge" id="formatIndicator">24H</span>
+      <div id="hora" aria-live="polite">00:00:00</div>
+      <div id="data">carregando data...</div>
+    </div>
+  </div>
 
   <script>
-    const horaElement = document.getElementById('hora');
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetRotateX = 0;
-    let targetRotateY = 0;
-    let currentRotateX = 0;
-    let currentRotateY = 0;
+    const card = document.getElementById('clock-card');
+    const horaEl = document.getElementById('hora');
+    const dataEl = document.getElementById('data');
+    const formatBadge = document.getElementById('formatIndicator');
+    
+    let is24h = true;
+    let targetRotateX = 0, targetRotateY = 0;
+    let currentRotateX = 0, currentRotateY = 0;
 
-    function atualizarHora() {
-      const agora = new Date();
-      horaElement.textContent = agora.toLocaleTimeString('pt-BR');
+    // 1. Atualizar Relógio e Data
+    function updateClock() {
+      const now = new Date();
+      
+      // Formato da Hora
+      const optionsTime = { 
+        hour: '2-digit', minute: '2-digit', second: '2-digit', 
+        hour12: !is24h 
+      };
+      horaEl.textContent = now.toLocaleTimeString('pt-BR', optionsTime);
+
+      // Formato da Data
+      const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+      dataEl.textContent = now.toLocaleDateString('pt-BR', optionsDate);
+
+      updateBackground(now.getHours());
     }
 
-    function animateTransform() {
-      currentRotateX += (targetRotateX - currentRotateX) * 0.1;
-      currentRotateY += (targetRotateY - currentRotateY) * 0.1;
-      
-      const scale = 1 + (Math.abs(currentRotateX) + Math.abs(currentRotateY)) / 200;
-      horaElement.style.transform = `perspective(1200px) rotateX(${-currentRotateX}deg) rotateY(${currentRotateY}deg) scale(${Math.min(scale, 1.1)})`;
-      
-      requestAnimationFrame(animateTransform);
+    // 2. Mudar Fundo baseado na Hora do Dia
+    function updateBackground(hour) {
+      let gradient = "";
+      if (hour >= 5 && hour < 12) { // Manhã
+        gradient = "linear-gradient(135deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%)";
+      } else if (hour >= 12 && hour < 18) { // Tarde
+        gradient = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
+      } else { // Noite
+        gradient = "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)";
+      }
+      document.body.style.background = gradient;
     }
 
-    horaElement.addEventListener('mousemove', function(event) {
-      const rect = horaElement.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      
-      mouseX = event.clientX - centerX;
-      mouseY = event.clientY - centerY;
-      
-      targetRotateX = (mouseY / rect.height) * 25;
-      targetRotateY = (mouseX / rect.width) * 25;
+    // 3. Efeito de Inclinação (Tilt) e Brilho (Spotlight)
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      // Define posição do brilho para o CSS
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+
+      // Cálculos para rotação
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      targetRotateX = (y - centerY) / 10; 
+      targetRotateY = (x - centerX) / 15;
     });
 
-    horaElement.addEventListener('mouseleave', function() {
+    card.addEventListener('mouseleave', () => {
       targetRotateX = 0;
       targetRotateY = 0;
     });
 
-    // Iniciar animação
-    animateTransform();
-    atualizarHora();
-    setInterval(atualizarHora, 1000);
+    // 4. Alternar Formato 12h/24h ao clicar
+    card.addEventListener('click', () => {
+      is24h = !is24h;
+      formatBadge.textContent = is24h ? "24H" : "12H";
+      updateClock();
+    });
+
+    // Loop de Animação Suave (Lerp)
+    function animate() {
+      currentRotateX += (targetRotateX - currentRotateX) * 0.1;
+      currentRotateY += (targetRotateY - currentRotateY) * 0.1;
+
+      card.style.transform = `rotateX(${-currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+      requestAnimationFrame(animate);
+    }
+
+    // Início
+    setInterval(updateClock, 1000);
+    updateClock();
+    animate();
   </script>
 </body>
 </html>
