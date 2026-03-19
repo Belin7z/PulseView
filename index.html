@@ -3,218 +3,213 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relógio Imersivo 3D</title>
-  <!-- Fonte Moderna -->
+  <title>Relógio Ultimate 3D</title>
   <link href="https://fonts.googleapis.com" rel="stylesheet">
   
   <style>
     :root {
-      /* Cores dinâmicas que podem ser alteradas via JS */
       --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --accent-color: #00d2ff;
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.2);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      user-select: none;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
 
     body {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       font-family: 'Inter', sans-serif;
       background: var(--bg-gradient);
-      transition: background 2s ease; /* Transição suave de cores por horário */
+      transition: background 2s ease;
       overflow: hidden;
       color: white;
     }
 
+    /* Canvas para Partículas */
+    #particles {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
     .container {
       text-align: center;
-      perspective: 1500px;
+      z-index: 1;
+      perspective: 2000px;
     }
 
     h1 {
-      font-size: 1.2rem;
+      font-size: 1rem;
       text-transform: uppercase;
-      letter-spacing: 8px;
-      margin-bottom: 2rem;
-      opacity: 0.6;
+      letter-spacing: 10px;
+      margin-bottom: 2.5rem;
+      opacity: 0.5;
       font-weight: 300;
-      animation: fadeIn 1.5s ease-out;
     }
 
-    /* O Cartão do Relógio */
+    /* O Cartão 3D */
     #clock-card {
       position: relative;
-      padding: 50px 80px;
-      border-radius: 30px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      padding: 60px 90px;
+      border-radius: 40px;
+      background: var(--glass);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       border: 1px solid var(--glass-border);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.4);
       cursor: pointer;
       transform-style: preserve-3d;
       transition: box-shadow 0.3s ease;
     }
 
-    /* Brilho que segue o mouse */
+    /* Reflexo Dinâmico */
     #clock-card::before {
       content: "";
       position: absolute;
       inset: 0;
-      border-radius: 30px;
-      background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.15) 0%, transparent 80%);
+      border-radius: 40px;
+      background: radial-gradient(circle at var(--m-x) var(--m-y), rgba(255,255,255,0.2) 0%, transparent 70%);
       opacity: 0;
-      transition: opacity 0.5s;
-      pointer-events: none;
+      transition: opacity 0.4s;
     }
-
-    #clock-card:hover::before {
-      opacity: 1;
-    }
+    #clock-card:hover::before { opacity: 1; }
 
     #hora {
-      font-size: 5rem;
+      font-size: 6rem;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 500;
       display: block;
-      margin-bottom: 10px;
-      text-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      margin-bottom: 5px;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
     }
 
     #data {
-      font-size: 1.1rem;
-      opacity: 0.8;
-      letter-spacing: 2px;
+      font-size: 1.2rem;
+      opacity: 0.7;
+      font-weight: 300;
+      letter-spacing: 1px;
     }
 
-    /* Badge de Formato (12h/24h) */
-    .format-badge {
+    /* Botão Fullscreen */
+    .fs-btn {
       position: absolute;
-      top: 20px;
+      bottom: 30px;
       right: 30px;
-      font-size: 0.7rem;
-      background: rgba(255,255,255,0.1);
-      padding: 4px 10px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: 0.3s;
+      z-index: 10;
     }
+    .fs-btn:hover { background: rgba(255,255,255,0.2); }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 0.6; transform: translateY(0); }
-    }
-
-    /* Responsividade básica */
     @media (max-width: 600px) {
-      #hora { font-size: 3rem; }
-      #clock-card { padding: 30px 40px; }
+      #hora { font-size: 3.5rem; }
+      #clock-card { padding: 40px 30px; margin: 20px; }
     }
   </style>
 </head>
 <body>
 
+  <canvas id="particles"></canvas>
+
   <div class="container">
-    <h1>System Time</h1>
-    
-    <div id="clock-card">
-      <span class="format-badge" id="formatIndicator">24H</span>
-      <div id="hora" aria-live="polite">00:00:00</div>
-      <div id="data">carregando data...</div>
+    <h1>Chronos System</h1>
+    <div id="clock-card" title="Clique para mudar formato">
+      <div id="hora">00:00:00</div>
+      <div id="data">---</div>
     </div>
   </div>
+
+  <button class="fs-btn" onclick="toggleFS()">TELA CHEIA</button>
 
   <script>
     const card = document.getElementById('clock-card');
     const horaEl = document.getElementById('hora');
     const dataEl = document.getElementById('data');
-    const formatBadge = document.getElementById('formatIndicator');
-    
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+
     let is24h = true;
-    let targetRotateX = 0, targetRotateY = 0;
-    let currentRotateX = 0, currentRotateY = 0;
+    let tX = 0, tY = 0, cX = 0, cY = 0;
 
-    // 1. Atualizar Relógio e Data
-    function updateClock() {
+    // 1. Relógio e Data
+    function update() {
       const now = new Date();
+      horaEl.textContent = now.toLocaleTimeString('pt-BR', { hour12: !is24h });
+      dataEl.textContent = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
       
-      // Formato da Hora
-      const optionsTime = { 
-        hour: '2-digit', minute: '2-digit', second: '2-digit', 
-        hour12: !is24h 
-      };
-      horaEl.textContent = now.toLocaleTimeString('pt-BR', optionsTime);
-
-      // Formato da Data
-      const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-      dataEl.textContent = now.toLocaleDateString('pt-BR', optionsDate);
-
-      updateBackground(now.getHours());
+      // Mudar cores conforme a hora
+      const h = now.getHours();
+      let color = "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)"; // Noite
+      if(h >= 5 && h < 12) color = "linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)"; // Manhã
+      if(h >= 12 && h < 18) color = "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)"; // Tarde
+      document.body.style.background = color;
     }
 
-    // 2. Mudar Fundo baseado na Hora do Dia
-    function updateBackground(hour) {
-      let gradient = "";
-      if (hour >= 5 && hour < 12) { // Manhã
-        gradient = "linear-gradient(135deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%)";
-      } else if (hour >= 12 && hour < 18) { // Tarde
-        gradient = "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)";
-      } else { // Noite
-        gradient = "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)";
-      }
-      document.body.style.background = gradient;
-    }
-
-    // 3. Efeito de Inclinação (Tilt) e Brilho (Spotlight)
+    // 2. Movimento 3D e Brilho
     card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      // Define posição do brilho para o CSS
-      card.style.setProperty('--mouse-x', `${x}px`);
-      card.style.setProperty('--mouse-y', `${y}px`);
-
-      // Cálculos para rotação
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      targetRotateX = (y - centerY) / 10; 
-      targetRotateY = (x - centerX) / 15;
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      card.style.setProperty('--m-x', `${x}px`);
+      card.style.setProperty('--m-y', `${y}px`);
+      tX = (y - r.height/2) / 10;
+      tY = (x - r.width/2) / 15;
     });
 
-    card.addEventListener('mouseleave', () => {
-      targetRotateX = 0;
-      targetRotateY = 0;
-    });
+    card.addEventListener('mouseleave', () => { tX = 0; tY = 0; });
+    card.addEventListener('click', () => { is24h = !is24h; update(); });
 
-    // 4. Alternar Formato 12h/24h ao clicar
-    card.addEventListener('click', () => {
-      is24h = !is24h;
-      formatBadge.textContent = is24h ? "24H" : "12H";
-      updateClock();
-    });
-
-    // Loop de Animação Suave (Lerp)
     function animate() {
-      currentRotateX += (targetRotateX - currentRotateX) * 0.1;
-      currentRotateY += (targetRotateY - currentRotateY) * 0.1;
-
-      card.style.transform = `rotateX(${-currentRotateX}deg) rotateY(${currentRotateY}deg)`;
+      cX += (tX - cX) * 0.1;
+      cY += (tY - cY) * 0.1;
+      card.style.transform = `rotateX(${-cX}deg) rotateY(${cY}deg)`;
+      drawParticles();
       requestAnimationFrame(animate);
     }
 
-    // Início
-    setInterval(updateClock, 1000);
-    updateClock();
+    // 3. Sistema de Partículas (Background Vivo)
+    let dots = [];
+    function initParticles() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      dots = Array.from({length: 100}, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        v: Math.random() * 0.5 + 0.1,
+        s: Math.random() * 2
+      }));
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(255,255,255,0.3)";
+      dots.forEach(d => {
+        d.y -= d.v;
+        if(d.y < 0) d.y = canvas.height;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.s, 0, Math.PI*2);
+        ctx.fill();
+      });
+    }
+
+    function toggleFS() {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+
+    window.addEventListener('resize', initParticles);
+    initParticles();
+    setInterval(update, 1000);
+    update();
     animate();
   </script>
 </body>
