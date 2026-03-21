@@ -1,0 +1,314 @@
+/* ==============================================
+   BELIN7Z CLOCK — style.css
+   Visual: Gamer | Roxo + Preto + Branco
+   Autor: Jefferson Alves (Belin7z)
+============================================== */
+
+/* ---------- RESET & VARIAVEIS ---------- */
+:root {
+  --c-bg:       #04000a;
+  --c-purple:   #7c3aed;
+  --c-purple2:  #a855f7;
+  --c-glow:     #d8b4fe;
+  --c-white:    #f5f0ff;
+  --c-muted:    rgba(216,180,254,0.35);
+  --c-border:   rgba(168,85,247,0.25);
+  --c-card-bg:  rgba(15,5,30,0.85);
+  --font-head:  'Orbitron', sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
+  --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-mono);
+  background: var(--c-bg);
+  color: var(--c-white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ---------- BACKGROUND ---------- */
+#particles-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+  animation: glowDrift 12s ease-in-out infinite;
+}
+.glow-1 { width: 600px; height: 600px; background: var(--c-purple);  top: -200px; left: -150px; animation-delay: 0s; }
+.glow-2 { width: 450px; height: 450px; background: var(--c-purple2); bottom: -180px; right: -120px; animation-delay: 5s; }
+
+@keyframes glowDrift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%      { transform: translate(40px,-40px) scale(1.1); }
+}
+
+/* ---------- LAYOUT ---------- */
+.wrapper {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  padding: 30px 20px;
+  width: 100%;
+}
+
+/* ---------- HEADER ---------- */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-tag {
+  font-family: var(--font-head);
+  font-size: clamp(1.1rem, 3vw, 1.8rem);
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, var(--c-white) 0%, var(--c-glow) 50%, var(--c-purple2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 18px rgba(168,85,247,0.7));
+}
+
+.header-city {
+  font-size: 0.65rem;
+  letter-spacing: 6px;
+  color: var(--c-muted);
+  text-transform: uppercase;
+}
+
+/* ---------- CLOCK SECTION ---------- */
+.clock-section {
+  position: relative;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.clock {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  transform: translateY(18px);
+  pointer-events: none;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.clock.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.clock-date {
+  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+  letter-spacing: 3px;
+  color: var(--c-muted);
+  text-transform: uppercase;
+}
+
+/* ---------- STYLE A: NEON ---------- */
+.neon-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  line-height: 1;
+}
+
+.neon-digit {
+  font-family: var(--font-head);
+  font-size: clamp(4.5rem, 14vw, 10rem);
+  font-weight: 900;
+  letter-spacing: -2px;
+  background: linear-gradient(160deg, #ffffff 0%, var(--c-glow) 45%, var(--c-purple2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: neonBreath 3s ease-in-out infinite;
+}
+
+.neon-sep {
+  font-family: var(--font-head);
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-weight: 900;
+  color: var(--c-purple2);
+  opacity: 1;
+  animation: sepBlink 1s step-start infinite;
+  align-self: flex-start;
+  margin-top: 10px;
+}
+
+@keyframes neonBreath {
+  0%,100% { filter: drop-shadow(0 0 16px rgba(168,85,247,0.7)); }
+  50%      { filter: drop-shadow(0 0 36px rgba(216,180,254,1)); }
+}
+
+@keyframes sepBlink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* ---------- STYLE B: CARDS ---------- */
+.cards-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-value {
+  font-family: var(--font-head);
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  font-weight: 700;
+  color: var(--c-white);
+  background: var(--c-card-bg);
+  border: 1px solid var(--c-border);
+  border-radius: 16px;
+  padding: 20px 28px;
+  min-width: 110px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(124,58,237,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.card-value::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.card-value::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 8%; right: 8%;
+  height: 1px;
+  background: var(--c-border);
+}
+
+.card-value.tick {
+  color: var(--c-glow);
+  box-shadow: 0 0 50px rgba(168,85,247,0.55), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.card-label {
+  font-size: 0.55rem;
+  letter-spacing: 5px;
+  color: var(--c-muted);
+}
+
+.card-sep {
+  font-family: var(--font-head);
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--c-purple);
+  opacity: 0.7;
+  padding-bottom: 24px;
+  animation: sepBlink 1s step-start infinite;
+}
+
+/* ---------- TOGGLE ---------- */
+.toggle-wrap {
+  display: flex;
+  gap: 10px;
+  background: rgba(10,0,22,0.7);
+  border: 1px solid var(--c-border);
+  border-radius: 50px;
+  padding: 5px;
+}
+
+.toggle-btn {
+  font-family: var(--font-head);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  padding: 10px 28px;
+  border: none;
+  border-radius: 50px;
+  background: transparent;
+  color: var(--c-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.toggle-btn.active {
+  background: var(--c-purple);
+  color: var(--c-white);
+  box-shadow: 0 0 20px rgba(124,58,237,0.6);
+}
+
+.toggle-btn:hover:not(.active) {
+  color: var(--c-glow);
+}
+
+/* ---------- WATERMARK ---------- */
+.watermark {
+  position: fixed;
+  bottom: 22px;
+  right: 24px;
+  z-index: 100;
+  text-align: right;
+  line-height: 1.4;
+  opacity: 0.55;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.watermark:hover { opacity: 1; transform: scale(1.04); }
+
+.wm-name {
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--c-white);
+  display: block;
+}
+.wm-sub {
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: var(--c-muted);
+  display: block;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 500px) {
+  .card-value   { min-width: 76px; padding: 14px 16px; }
+  .cards-row    { gap: 6px; }
+  .wrapper      { gap: 28px; }
+  .clock-section{ min-height: 130px; }
+}
