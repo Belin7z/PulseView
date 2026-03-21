@@ -1,376 +1,82 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Belin7z Clock</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  font-family:'JetBrains Mono',monospace;
-  background:#050008;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
-  position:relative;
-  gap:50px;
-}
-
-/* BG animated */
-.bg-orbs{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-}
-.orb{
-  position:absolute;
-  border-radius:50%;
-  filter:blur(80px);
-  animation:orbFloat 8s ease-in-out infinite;
-  opacity:0.15;
-}
-.orb1{width:400px;height:400px;background:#6b21a8;top:-100px;left:-100px;animation-delay:0s;}
-.orb2{width:300px;height:300px;background:#9333ea;bottom:-80px;right:-80px;animation-delay:3s;}
-.orb3{width:200px;height:200px;background:#a855f7;top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:1.5s;}
-
-@keyframes orbFloat{
-  0%,100%{transform:translate(0,0) scale(1);}
-  33%{transform:translate(30px,-30px) scale(1.05);}
-  66%{transform:translate(-20px,20px) scale(0.95);}
-}
-
-/* PARTICLES */
-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
-
-/* LABEL */
-.city-label{
-  position:relative;
-  z-index:10;
-  color:rgba(255,255,255,0.4);
-  font-size:0.7rem;
-  letter-spacing:8px;
-  text-transform:uppercase;
-  margin-bottom:-30px;
-}
-
-/* --- STYLE 1: DIGITAL NEON --- */
-.clock-digital{
-  position:relative;
-  z-index:10;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:10px;
-}
-
-.digits{
-  font-family:'Orbitron',sans-serif;
-  font-size:clamp(4rem,12vw,9rem);
-  font-weight:900;
-  letter-spacing:4px;
-  background:linear-gradient(135deg,#fff 0%,#c084fc 40%,#7c3aed 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  filter:drop-shadow(0 0 30px rgba(168,85,247,0.8)) drop-shadow(0 0 60px rgba(109,40,217,0.4));
-  animation:neonPulse 2s ease-in-out infinite;
-  transition:all 0.1s ease;
-}
-
-@keyframes neonPulse{
-  0%,100%{filter:drop-shadow(0 0 20px rgba(168,85,247,0.8)) drop-shadow(0 0 50px rgba(109,40,217,0.3));}
-  50%{filter:drop-shadow(0 0 40px rgba(192,132,252,1)) drop-shadow(0 0 80px rgba(139,92,246,0.6));}
-}
-
-.colon-blink{
-  animation:colonBlink 1s step-start infinite;
-}
-@keyframes colonBlink{0%,100%{opacity:1;}50%{opacity:0;}}
-
-.date-digital{
-  font-size:0.85rem;
-  color:rgba(200,150,255,0.7);
-  letter-spacing:3px;
-  text-transform:uppercase;
-}
-
-/* Separator */
-.separator{
-  position:relative;
-  z-index:10;
-  width:60vw;
-  max-width:500px;
-  height:1px;
-  background:linear-gradient(90deg,transparent,rgba(168,85,247,0.6),rgba(255,255,255,0.3),rgba(168,85,247,0.6),transparent);
-  animation:sepGlow 3s ease-in-out infinite;
-}
-@keyframes sepGlow{
-  0%,100%{opacity:0.5;}
-  50%{opacity:1;box-shadow:0 0 10px rgba(168,85,247,0.5);}
-}
-
-.sep-label{
-  position:relative;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  color:rgba(255,255,255,0.2);
-  font-size:0.6rem;
-  letter-spacing:6px;
-  text-transform:uppercase;
-}
-.sep-label::before,.sep-label::after{
-  content:'';
-  width:60px;
-  height:1px;
-  background:rgba(168,85,247,0.3);
-}
-
-/* --- STYLE 2: CARDS SEGMENTADOS --- */
-.clock-cards{
-  position:relative;
-  z-index:10;
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.card{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-}
-
-.card-num{
-  background:rgba(10,0,20,0.8);
-  border:1px solid rgba(168,85,247,0.3);
-  border-radius:12px;
-  padding:16px 20px;
-  min-width:80px;
-  text-align:center;
-  font-family:'Orbitron',sans-serif;
-  font-size:clamp(2rem,6vw,3.5rem);
-  font-weight:700;
-  color:#e9d5ff;
-  box-shadow:0 0 20px rgba(109,40,217,0.3),inset 0 1px 0 rgba(255,255,255,0.05);
-  position:relative;
-  overflow:hidden;
-  transition:all 0.15s ease;
-}
-
-.card-num::before{
-  content:'';
-  position:absolute;
-  top:0;left:0;right:0;
-  height:50%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.04),transparent);
-}
-
-.card-num::after{
-  content:'';
-  position:absolute;
-  top:50%;left:0;right:0;
-  height:1px;
-  background:rgba(168,85,247,0.2);
-}
-
-.card-num.flip{
-  animation:cardFlip 0.15s ease;
-}
-@keyframes cardFlip{
-  0%{transform:rotateX(0deg);}
-  50%{transform:rotateX(-10deg);color:#c084fc;box-shadow:0 0 40px rgba(168,85,247,0.6),inset 0 1px 0 rgba(255,255,255,0.05);}
-  100%{transform:rotateX(0deg);}
-}
-
-.card-label{
-  font-size:0.55rem;
-  letter-spacing:4px;
-  color:rgba(168,85,247,0.5);
-  text-transform:uppercase;
-}
-
-.colon-card{
-  font-family:'Orbitron',sans-serif;
-  font-size:clamp(1.5rem,4vw,2.5rem);
-  font-weight:700;
-  color:rgba(168,85,247,0.5);
-  padding-bottom:20px;
-  animation:colonBlink 1s step-start infinite;
-}
-
-/* Date cards */
-.date-cards{
-  display:flex;
-  gap:8px;
-  margin-top:8px;
-}
-.date-mini{
-  font-size:0.65rem;
-  letter-spacing:2px;
-  color:rgba(200,150,255,0.5);
-  text-transform:uppercase;
-  text-align:center;
-}
-
-/* WATERMARK */
-.watermark{
-  position:fixed;
-  bottom:24px;
-  right:28px;
-  z-index:100;
-  text-align:right;
-  transition:0.3s;
-}
-.watermark:hover{transform:scale(1.05);}
-.wm-name{
-  font-family:'Orbitron',sans-serif;
-  font-size:0.85rem;
-  font-weight:700;
-  color:rgba(255,255,255,0.7);
-  letter-spacing:2px;
-}
-.wm-sub{
-  font-size:0.65rem;
-  color:rgba(168,85,247,0.5);
-  letter-spacing:1px;
-  margin-top:2px;
-}
-
-@media(max-width:600px){
-  body{gap:35px;}
-  .card-num{min-width:60px;padding:12px 14px;}
-  .digits{font-size:3.5rem;}
-  .sep-label{display:none;}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Belin7z Clock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<canvas id="c"></canvas>
-<div class="bg-orbs">
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
-</div>
+  <!-- Background -->
+  <canvas id="particles-canvas"></canvas>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
 
-<span class="city-label">Bras&iacute;lia &mdash; UTC-3</span>
+  <!-- Main -->
+  <main class="wrapper">
 
-<!-- STYLE 1: Digital Neon -->
-<div class="clock-digital">
-  <div class="digits" id="d1">
-    <span id="h1">00</span><span class="colon-blink">:</span><span id="m1">00</span><span class="colon-blink">:</span><span id="s1">00</span>
+    <!-- Header -->
+    <header class="header">
+      <span class="header-tag">&lt; Belin7z /&gt;</span>
+      <span class="header-city">&#127477;&#127479; Bras&iacute;lia &bull; UTC-3</span>
+    </header>
+
+    <!-- Clock Display -->
+    <section class="clock-section" id="clock-section">
+
+      <!-- STYLE A: NEON -->
+      <div class="clock clock-neon active" id="clock-neon">
+        <div class="neon-time">
+          <span class="neon-digit" id="n-h">00</span>
+          <span class="neon-sep">:</span>
+          <span class="neon-digit" id="n-m">00</span>
+          <span class="neon-sep">:</span>
+          <span class="neon-digit" id="n-s">00</span>
+        </div>
+        <div class="clock-date" id="n-date">---</div>
+      </div>
+
+      <!-- STYLE B: CARDS -->
+      <div class="clock clock-cards" id="clock-cards">
+        <div class="cards-row">
+          <div class="card">
+            <div class="card-value" id="c-h">00</div>
+            <div class="card-label">HORA</div>
+          </div>
+          <span class="card-sep">:</span>
+          <div class="card">
+            <div class="card-value" id="c-m">00</div>
+            <div class="card-label">MIN</div>
+          </div>
+          <span class="card-sep">:</span>
+          <div class="card">
+            <div class="card-value" id="c-s">00</div>
+            <div class="card-label">SEG</div>
+          </div>
+        </div>
+        <div class="clock-date" id="c-date">---</div>
+      </div>
+
+    </section>
+
+    <!-- Toggle -->
+    <div class="toggle-wrap">
+      <button class="toggle-btn active" id="btn-neon" onclick="switchStyle('neon')">NEON</button>
+      <button class="toggle-btn" id="btn-cards" onclick="switchStyle('cards')">CARDS</button>
+    </div>
+
+  </main>
+
+  <!-- Watermark -->
+  <div class="watermark">
+    <span class="wm-name">Belin7z</span>
+    <span class="wm-sub">Jefferson Alves</span>
   </div>
-  <div class="date-digital" id="date1">---</div>
-</div>
 
-<!-- Separator -->
-<div class="sep-label"><span>estilos</span></div>
-
-<!-- STYLE 2: Cards -->
-<div class="clock-cards">
-  <div class="card">
-    <div class="card-num" id="ch">00</div>
-    <div class="card-label">hora</div>
-  </div>
-  <div class="colon-card">:</div>
-  <div class="card">
-    <div class="card-num" id="cm">00</div>
-    <div class="card-label">min</div>
-  </div>
-  <div class="colon-card">:</div>
-  <div class="card">
-    <div class="card-num" id="cs">00</div>
-    <div class="card-label">seg</div>
-  </div>
-</div>
-<div class="date-mini" id="date2">---</div>
-
-<!-- Watermark -->
-<div class="watermark">
-  <div class="wm-name">Belin7z</div>
-  <div class="wm-sub">Jefferson Alves</div>
-</div>
-
-<script>
-const canvas=document.getElementById('c');
-const ctx=canvas.getContext('2d');
-let dots=[];
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
-function initDots(){
-  dots=Array.from({length:80},()=>({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    r:Math.random()*1.5+0.3,
-    vy:-(Math.random()*0.4+0.1),
-    o:Math.random()*0.4+0.1
-  }));
-}
-function drawDots(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  dots.forEach(d=>{
-    d.y+=d.vy;
-    if(d.y<0)d.y=canvas.height;
-    ctx.beginPath();
-    ctx.arc(d.x,d.y,d.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(168,85,247,${d.o})`;
-    ctx.fill();
-  });
-  requestAnimationFrame(drawDots);
-}
-resize();initDots();drawDots();
-window.addEventListener('resize',()=>{resize();initDots();});
-
-const prev={h:'',m:'',s:''};
-
-const DAYS=['domingo','segunda-feira','ter\u00e7a-feira','quarta-feira','quinta-feira','sexta-feira','s\u00e1bado'];
-const MONTHS=['janeiro','fevereiro','mar\u00e7o','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-
-function pad(n){return String(n).padStart(2,'0');}
-
-function flip(el){
-  el.classList.remove('flip');
-  void el.offsetWidth;
-  el.classList.add('flip');
-}
-
-function tick(){
-  const now=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Sao_Paulo'}));
-  const h=pad(now.getHours());
-  const m=pad(now.getMinutes());
-  const s=pad(now.getSeconds());
-  const dayName=DAYS[now.getDay()];
-  const day=now.getDate();
-  const month=MONTHS[now.getMonth()];
-  const year=now.getFullYear();
-  const dateStr=`${dayName}, ${day} de ${month} de ${year}`;
-
-  document.getElementById('h1').textContent=h;
-  document.getElementById('m1').textContent=m;
-  document.getElementById('s1').textContent=s;
-  document.getElementById('date1').textContent=dateStr;
-
-  const ch=document.getElementById('ch');
-  const cm=document.getElementById('cm');
-  const cs=document.getElementById('cs');
-
-  if(h!==prev.h){ch.textContent=h;flip(ch);prev.h=h;}
-  if(m!==prev.m){cm.textContent=m;flip(cm);prev.m=m;}
-  if(s!==prev.s){cs.textContent=s;flip(cs);prev.s=s;}
-
-  document.getElementById('date2').textContent=dateStr;
-}
-
-tick();
-setInterval(tick,1000);
-</script>
+  <script src="particles.js"></script>
+  <script src="clock.js"></script>
 </body>
 </html>
