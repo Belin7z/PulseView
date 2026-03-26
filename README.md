@@ -1,34 +1,68 @@
-# PulseView 🚀
+# PulseView
 
-**[>> Clique aqui para acessar a demo <<](https://belin7z.github.io/PulseView/)**
-Um site interativo e moderno que exibe a hora atual com um efeito parallax 3D dinâmico.
+**[>> demo ao vivo <<](https://belin7z.github.io/PulseView/)**
 
----
-
-## 📝 Descrição
-
-Este é um projeto simples mas elegante que demonstra a combinação de **HTML, CSS e JavaScript** para criar uma experiência visual atraente. A página exibe "PulseView" e um relógio em tempo real que responde ao movimento do mouse com um efeito parallax 3D suave e fluido.
+um relógio digital feito do zero com HTML, CSS e JS puro. sem frameworks, sem dependências. só código.
 
 ---
 
-## ✨ Características
+## o que é isso
 
-- ✅ **Efeito Parallax 3D Dinâmico** - O relógio rotaciona e amplia suavemente ao passar o mouse, criando uma sensação de profundidade
-- ✅ **Atualização de Hora em Tempo Real** - O relógio atualiza a cada segundo, exibindo a hora no formato HH:MM:SS
-- ✅ **Design Glassmorphism** - Interface moderna com efeito de vidro fosco e desfoque de fundo
-- ✅ **Gradiente Vibrante** - Fundo com gradiente de cores que transiciona de azul para roxo
-- ✅ **Animação de Entrada** - O título tem uma animação suave ao carregar a página
-- ✅ **Responsivo** - Funciona perfeitamente em dispositivos de diferentes tamanhos
-- ✅ **Sem Seleção de Texto** - Experiência de usuário aprimorada ao interagir com o elemento
+comecei esse projeto pra praticar e foi crescendo. hoje tem tema, cronômetro, alarme, fuso horário, partículas no fundo, modo PWA... virou uma bagunça boa.
+
+a ideia principal é exibir a hora atual com um visual gamer — fundo escuro, neon roxo, fonte monospace, aquele estilo.
 
 ---
 
-## 🎯 Objetivo
+## funcionalidades
 
-Este projeto foi criado como um **exercício prático** para:
+- relógio em tempo real (HH:MM:SS)
+- troca de temas: roxo, ciano, vermelho e verde
+- seletor de fuso horário (Brasília, UTC, Tokyo, NY...)
+- modo 12h/24h
+- cronômetro com milissegundos
+- alarme simples com beep
+- partículas e estrelas no background (pausam quando a aba tá oculta)
+- animação flip nos dígitos
+- efeito glitch no título
+- responsivo e funciona como PWA
+- swipe no mobile
 
-- Aprender e praticar **HTML, CSS e JavaScript**
-- Entender conceitos de **centralização com Flexbox**
-- Dominar **transformações 3D e perspectiva CSS**
-- Implementar **animações fluidas com `requestAnimationFrame()`**
-- Trabalhar com **Git e GitHub**
+---
+
+## stack
+
+- HTML5
+- CSS3 (variáveis, animações, glassmorphism)
+- JavaScript puro (sem jQuery, sem nada)
+
+---
+
+## rodando local
+
+```bash
+git clone https://github.com/Belin7z/PulseView.git
+cd PulseView
+# abre o index.html no navegador, só isso
+```
+
+não precisa instalar nada. abre e roda.
+
+---
+
+## estrutura
+
+```
+PulseView/
+├── index.html
+├── manifest.json
+├── css/
+│   └── style.css
+└── js/
+    ├── clock.js
+    └── particles.js
+```
+
+---
+
+feito por [Belin7z](https://github.com/Belin7z) — projeto de estudo, tá em constante mudança
