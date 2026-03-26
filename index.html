@@ -3,28 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="PulseView — Relógio dinâmico com efeitos visuais modernos" />
+  <meta name="description" content="PulseView — Relógio gamer com efeitos visuais modernos" />
+  <meta name="theme-color" content="#7c3aed" />
   <title>PulseView</title>
+  <link rel="manifest" href="manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-
-  <!-- Canvas de partículas -->
   <canvas id="particles-canvas"></canvas>
-
-  <!-- Glows de fundo -->
   <div class="bg-glow glow-1"></div>
   <div class="bg-glow glow-2"></div>
   <div class="bg-glow glow-3"></div>
-
-  <!-- Scanlines overlay -->
   <div class="scanlines"></div>
 
-  <main class="wrapper">
+  <!-- Painel de configuracoes -->
+  <div class="settings-panel" id="settings-panel">
+    <div class="settings-header">
+      <span class="settings-title">CONFIG</span>
+      <button class="settings-close" id="settings-close">&#x2715;</button>
+    </div>
+    <div class="settings-group">
+      <label class="settings-label">TEMA DE COR</label>
+      <div class="color-themes">
+        <button class="theme-btn active" data-theme="purple" title="Roxo"></button>
+        <button class="theme-btn" data-theme="cyan" title="Ciano"></button>
+        <button class="theme-btn" data-theme="red" title="Vermelho"></button>
+        <button class="theme-btn" data-theme="green" title="Verde Matrix"></button>
+      </div>
+    </div>
+    <div class="settings-group">
+      <label class="settings-label">FORMATO DE HORA</label>
+      <div class="toggle-format">
+        <button class="fmt-btn active" id="fmt-24">24H</button>
+        <button class="fmt-btn" id="fmt-12">12H</button>
+      </div>
+    </div>
+    <div class="settings-group">
+      <label class="settings-label">FUSO HORÁRIO</label>
+      <select class="tz-select" id="tz-select">
+        <option value="America/Sao_Paulo">Brasil (BRT)</option>
+        <option value="America/New_York">New York (ET)</option>
+        <option value="America/Los_Angeles">Los Angeles (PT)</option>
+        <option value="Europe/London">Londres (GMT)</option>
+        <option value="Europe/Paris">Paris (CET)</option>
+        <option value="Asia/Tokyo">Tokyo (JST)</option>
+        <option value="Asia/Seoul">Seoul (KST)</option>
+        <option value="UTC">UTC</option>
+      </select>
+    </div>
+    <div class="settings-group">
+      <label class="settings-label">ALARME</label>
+      <div class="alarm-row">
+        <input class="alarm-input" type="time" id="alarm-time" />
+        <button class="alarm-btn" id="alarm-toggle">ATIVAR</button>
+      </div>
+      <div class="alarm-status" id="alarm-status"></div>
+    </div>
+  </div>
+  <div class="settings-overlay" id="settings-overlay"></div>
 
-    <!-- Header -->
+  <main class="wrapper">
     <header class="header">
       <div class="header-logo">
         <span class="logo-bracket">&lt;</span>
@@ -32,84 +72,106 @@
         <span class="logo-slash">/</span>
         <span class="logo-bracket">&gt;</span>
       </div>
-      <div class="header-badge">
-        <span class="badge-dot"></span>
-        <span>PulseView</span>
-        <span class="badge-sep">•</span>
-        <span>&#127477;&#127479; Brasília</span>
-        <span class="badge-sep">•</span>
-        <span>UTC-3</span>
+      <div class="header-controls">
+        <div class="header-badge">
+          <span class="badge-dot"></span>
+          <span>PulseView</span>
+          <span class="badge-sep">•</span>
+          <span id="badge-tz">Brasília</span>
+          <span class="badge-sep">•</span>
+          <span id="badge-utc">UTC-3</span>
+        </div>
+        <button class="settings-btn" id="settings-btn" title="Configurações">&#9881;</button>
       </div>
     </header>
 
-    <!-- Clock principal -->
     <section class="clock-section" id="clock-section">
-
-      <!-- STYLE A: NEON -->
+      <!-- NEON -->
       <div class="clock clock-neon active" id="clock-neon">
         <div class="neon-time">
           <div class="neon-unit">
-            <span class="neon-digit" id="n-h">00</span>
+            <div class="flip-container" id="n-h-flip">
+              <span class="neon-digit" id="n-h">00</span>
+            </div>
             <span class="neon-label">HORA</span>
           </div>
           <span class="neon-sep">:</span>
           <div class="neon-unit">
-            <span class="neon-digit" id="n-m">00</span>
+            <div class="flip-container" id="n-m-flip">
+              <span class="neon-digit" id="n-m">00</span>
+            </div>
             <span class="neon-label">MIN</span>
           </div>
           <span class="neon-sep">:</span>
           <div class="neon-unit">
-            <span class="neon-digit" id="n-s">00</span>
+            <div class="flip-container" id="n-s-flip">
+              <span class="neon-digit" id="n-s">00</span>
+            </div>
             <span class="neon-label">SEG</span>
           </div>
         </div>
-        <!-- Barra de progresso dos segundos -->
         <div class="progress-bar-wrap">
           <div class="progress-bar" id="progress-bar"></div>
+          <span class="sec-badge" id="sec-badge-n">00s</span>
         </div>
         <div class="clock-date" id="n-date">---</div>
       </div>
 
-      <!-- STYLE B: CARDS -->
+      <!-- CARDS -->
       <div class="clock clock-cards" id="clock-cards">
         <div class="cards-row">
           <div class="card">
-            <div class="card-value" id="c-h">00</div>
+            <div class="card-value flip-container" id="c-h">00</div>
             <div class="card-label">HORA</div>
           </div>
           <span class="card-sep">:</span>
           <div class="card">
-            <div class="card-value" id="c-m">00</div>
+            <div class="card-value flip-container" id="c-m">00</div>
             <div class="card-label">MIN</div>
           </div>
           <span class="card-sep">:</span>
           <div class="card">
-            <div class="card-value" id="c-s">00</div>
+            <div class="card-value flip-container" id="c-s">00</div>
             <div class="card-label">SEG</div>
           </div>
         </div>
-        <!-- Barra de progresso dos segundos -->
         <div class="progress-bar-wrap">
           <div class="progress-bar" id="progress-bar-c"></div>
+          <span class="sec-badge" id="sec-badge-c">00s</span>
         </div>
         <div class="clock-date" id="c-date">---</div>
       </div>
 
+      <!-- CRONOMETRO -->
+      <div class="clock clock-stopwatch" id="clock-stopwatch">
+        <div class="stopwatch-display">
+          <span class="sw-digit" id="sw-h">00</span>
+          <span class="sw-sep">:</span>
+          <span class="sw-digit" id="sw-m">00</span>
+          <span class="sw-sep">:</span>
+          <span class="sw-digit" id="sw-s">00</span>
+          <span class="sw-ms" id="sw-ms">.00</span>
+        </div>
+        <div class="stopwatch-controls">
+          <button class="sw-btn" id="sw-start">START</button>
+          <button class="sw-btn sw-btn-reset" id="sw-reset">RESET</button>
+        </div>
+      </div>
     </section>
 
-    <!-- Toggle de estilo -->
-    <nav class="toggle-wrap" aria-label="Alternar estilo do relógio">
+    <nav class="toggle-wrap" aria-label="Alternar modo">
       <button class="toggle-btn active" id="btn-neon" onclick="switchStyle('neon')">NEON</button>
       <button class="toggle-btn" id="btn-cards" onclick="switchStyle('cards')">CARDS</button>
+      <button class="toggle-btn" id="btn-stopwatch" onclick="switchStyle('stopwatch')">TIMER</button>
     </nav>
-
   </main>
 
-  <!-- Watermark -->
   <footer class="watermark">
     <span class="wm-name">Belin7z</span>
     <span class="wm-sub">Jefferson Alves</span>
   </footer>
+
+  <div class="alarm-toast" id="alarm-toast">&#9200; ALARME!</div>
 
   <script src="js/particles.js"></script>
   <script src="js/clock.js"></script>
