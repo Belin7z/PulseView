@@ -1,0 +1,22 @@
+{
+  "name": "PulseView",
+  "short_name": "PulseView",
+  "description": "Relogio gamer com efeitos visuais modernos",
+  "start_url": "/PulseView/",
+  "display": "standalone",
+  "background_color": "#030008",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192x192/7c3aed/ffffff?text=PV",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512x512/7c3aed/ffffff?text=PV",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
