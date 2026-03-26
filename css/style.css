@@ -878,3 +878,52 @@ kbd {
   .card-sep { font-size: 2rem; }
   body { cursor: default; }
 }
+
+
+/* =================== */
+/* DISABLE TEXT SELECTION */
+/* =================== */
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* =================== */
+/* ENHANCED FOOTER */
+/* =================== */
+.wm-name {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--primary);
+  text-shadow:
+    0 0 10px var(--primary),
+    0 0 20px var(--glow);
+  animation: footerPulse 2s ease-in-out infinite;
+}
+
+.wm-sub {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@keyframes footerPulse {
+  0%, 100% { 
+    text-shadow:
+      0 0 10px var(--primary),
+      0 0 20px var(--glow);
+  }
+  50% { 
+    text-shadow:
+      0 0 15px var(--primary),
+      0 0 30px var(--glow),
+      0 0 40px var(--glow);
+  }
+}
