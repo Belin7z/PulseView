@@ -3,45 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="PulseView — Relógio gamer com efeitos visuais modernos" />
+
+  <!-- SEO -->
+  <meta name="description" content="PulseView — Relógio gamer com temas neon, cronômetro, alarme e suporte a múltiplos fusos horários." />
+  <meta name="author" content="Belin7z" />
   <meta name="theme-color" content="#7c3aed" />
+
+  <!-- Open Graph (Discord, WhatsApp, Twitter) -->
+  <meta property="og:title" content="PulseView" />
+  <meta property="og:description" content="Relógio gamer com visual neon, cronômetro, alarme e temas de cor." />
+  <meta property="og:url" content="https://belin7z.github.io/PulseView/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+
   <title>PulseView</title>
+
+  <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
+
+  <!-- Fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <canvas id="particles-canvas"></canvas>
-  <div class="bg-glow glow-1"></div>
-  <div class="bg-glow glow-2"></div>
-  <div class="bg-glow glow-3"></div>
-  <div class="scanlines"></div>
 
-  <!-- Painel de configuracoes -->
-  <div class="settings-panel" id="settings-panel">
+  <!-- Background -->
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+  <div class="bg-glow glow-1" aria-hidden="true"></div>
+  <div class="bg-glow glow-2" aria-hidden="true"></div>
+  <div class="bg-glow glow-3" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- Painel de configurações -->
+  <aside class="settings-panel" id="settings-panel" aria-label="Configurações" role="dialog" aria-modal="true">
     <div class="settings-header">
       <span class="settings-title">CONFIG</span>
-      <button class="settings-close" id="settings-close">&#x2715;</button>
+      <button class="settings-close" id="settings-close" aria-label="Fechar configurações">&#x2715;</button>
     </div>
+
     <div class="settings-group">
       <label class="settings-label">TEMA DE COR</label>
-      <div class="color-themes">
-        <button class="theme-btn active" data-theme="purple" title="Roxo"></button>
-        <button class="theme-btn" data-theme="cyan" title="Ciano"></button>
-        <button class="theme-btn" data-theme="red" title="Vermelho"></button>
-        <button class="theme-btn" data-theme="green" title="Verde Matrix"></button>
+      <div class="color-themes" role="group" aria-label="Temas de cor">
+        <button class="theme-btn active" data-theme="purple" title="Roxo" aria-pressed="true"></button>
+        <button class="theme-btn" data-theme="cyan" title="Ciano" aria-pressed="false"></button>
+        <button class="theme-btn" data-theme="red" title="Vermelho" aria-pressed="false"></button>
+        <button class="theme-btn" data-theme="green" title="Verde Matrix" aria-pressed="false"></button>
       </div>
     </div>
+
     <div class="settings-group">
       <label class="settings-label">FORMATO DE HORA</label>
-      <div class="toggle-format">
-        <button class="fmt-btn active" id="fmt-24">24H</button>
-        <button class="fmt-btn" id="fmt-12">12H</button>
+      <div class="toggle-format" role="group">
+        <button class="fmt-btn active" id="fmt-24" aria-pressed="true">24H</button>
+        <button class="fmt-btn" id="fmt-12" aria-pressed="false">12H</button>
       </div>
     </div>
+
     <div class="settings-group">
-      <label class="settings-label">FUSO HORÁRIO</label>
+      <label class="settings-label" for="tz-select">FUSO HORÁRIO</label>
       <select class="tz-select" id="tz-select">
         <option value="America/Sao_Paulo">Brasil (BRT)</option>
         <option value="America/New_York">New York (ET)</option>
@@ -53,41 +75,54 @@
         <option value="UTC">UTC</option>
       </select>
     </div>
+
     <div class="settings-group">
-      <label class="settings-label">ALARME</label>
+      <label class="settings-label" for="alarm-time">ALARME</label>
       <div class="alarm-row">
-        <input class="alarm-input" type="time" id="alarm-time" />
+        <input class="alarm-input" type="time" id="alarm-time" aria-label="Horário do alarme" />
         <button class="alarm-btn" id="alarm-toggle">ATIVAR</button>
       </div>
-      <div class="alarm-status" id="alarm-status"></div>
+      <div class="alarm-status" id="alarm-status" role="status" aria-live="polite"></div>
     </div>
-  </div>
-  <div class="settings-overlay" id="settings-overlay"></div>
 
+    <div class="settings-group">
+      <label class="settings-label">EXTRAS</label>
+      <div class="extras-row">
+        <button class="extra-btn" id="btn-fullscreen" title="Tela cheia (F)">&#x26F6; FULLSCREEN</button>
+        <button class="extra-btn" id="btn-export-sw" title="Exportar tempo">&#x2B07; EXPORTAR</button>
+      </div>
+      <div class="shortcuts-hint">Atalhos: <kbd>Space</kbd> cronômetro &nbsp; <kbd>R</kbd> reset &nbsp; <kbd>T</kbd> tema &nbsp; <kbd>F</kbd> fullscreen</div>
+    </div>
+  </aside>
+
+  <div class="settings-overlay" id="settings-overlay" aria-hidden="true"></div>
+
+  <!-- App principal -->
   <main class="wrapper">
     <header class="header">
-      <div class="header-logo">
+      <div class="header-logo" aria-label="Belin7z">
         <span class="logo-bracket">&lt;</span>
         <span class="logo-name">Belin7z</span>
         <span class="logo-slash">/</span>
         <span class="logo-bracket">&gt;</span>
       </div>
       <div class="header-controls">
-        <div class="header-badge">
-          <span class="badge-dot"></span>
+        <div class="header-badge" aria-live="polite">
+          <span class="badge-dot" aria-hidden="true"></span>
           <span>PulseView</span>
-          <span class="badge-sep">•</span>
+          <span class="badge-sep" aria-hidden="true">&bull;</span>
           <span id="badge-tz">Brasília</span>
-          <span class="badge-sep">•</span>
+          <span class="badge-sep" aria-hidden="true">&bull;</span>
           <span id="badge-utc">UTC-3</span>
         </div>
-        <button class="settings-btn" id="settings-btn" title="Configurações">&#9881;</button>
+        <button class="settings-btn" id="settings-btn" title="Configurações (S)" aria-label="Abrir configurações">&#9881;</button>
       </div>
     </header>
 
-    <section class="clock-section" id="clock-section">
+    <section class="clock-section" id="clock-section" aria-label="Relógio">
+
       <!-- NEON -->
-      <div class="clock clock-neon active" id="clock-neon">
+      <div class="clock clock-neon active" id="clock-neon" role="timer">
         <div class="neon-time">
           <div class="neon-unit">
             <div class="flip-container" id="n-h-flip">
@@ -95,14 +130,14 @@
             </div>
             <span class="neon-label">HORA</span>
           </div>
-          <span class="neon-sep">:</span>
+          <span class="neon-sep" aria-hidden="true">:</span>
           <div class="neon-unit">
             <div class="flip-container" id="n-m-flip">
               <span class="neon-digit" id="n-m">00</span>
             </div>
             <span class="neon-label">MIN</span>
           </div>
-          <span class="neon-sep">:</span>
+          <span class="neon-sep" aria-hidden="true">:</span>
           <div class="neon-unit">
             <div class="flip-container" id="n-s-flip">
               <span class="neon-digit" id="n-s">00</span>
@@ -110,26 +145,26 @@
             <span class="neon-label">SEG</span>
           </div>
         </div>
-        <div class="progress-bar-wrap">
+        <div class="progress-bar-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="60">
           <div class="progress-bar" id="progress-bar"></div>
-          <span class="sec-badge" id="sec-badge-n">00s</span>
+          <span class="sec-badge" id="sec-badge-n" aria-hidden="true">00s</span>
         </div>
-        <div class="clock-date" id="n-date">---</div>
+        <div class="clock-date" id="n-date" aria-live="polite">---</div>
       </div>
 
       <!-- CARDS -->
-      <div class="clock clock-cards" id="clock-cards">
+      <div class="clock clock-cards" id="clock-cards" role="timer">
         <div class="cards-row">
           <div class="card">
             <div class="card-value flip-container" id="c-h">00</div>
             <div class="card-label">HORA</div>
           </div>
-          <span class="card-sep">:</span>
+          <span class="card-sep" aria-hidden="true">:</span>
           <div class="card">
             <div class="card-value flip-container" id="c-m">00</div>
             <div class="card-label">MIN</div>
           </div>
-          <span class="card-sep">:</span>
+          <span class="card-sep" aria-hidden="true">:</span>
           <div class="card">
             <div class="card-value flip-container" id="c-s">00</div>
             <div class="card-label">SEG</div>
@@ -137,43 +172,46 @@
         </div>
         <div class="progress-bar-wrap">
           <div class="progress-bar" id="progress-bar-c"></div>
-          <span class="sec-badge" id="sec-badge-c">00s</span>
+          <span class="sec-badge" id="sec-badge-c" aria-hidden="true">00s</span>
         </div>
-        <div class="clock-date" id="c-date">---</div>
+        <div class="clock-date" id="c-date" aria-live="polite">---</div>
       </div>
 
-      <!-- CRONOMETRO -->
-      <div class="clock clock-stopwatch" id="clock-stopwatch">
-        <div class="stopwatch-display">
+      <!-- CRONÔMETRO -->
+      <div class="clock clock-stopwatch" id="clock-stopwatch" role="timer">
+        <div class="stopwatch-display" aria-live="off">
           <span class="sw-digit" id="sw-h">00</span>
-          <span class="sw-sep">:</span>
+          <span class="sw-sep" aria-hidden="true">:</span>
           <span class="sw-digit" id="sw-m">00</span>
-          <span class="sw-sep">:</span>
+          <span class="sw-sep" aria-hidden="true">:</span>
           <span class="sw-digit" id="sw-s">00</span>
           <span class="sw-ms" id="sw-ms">.00</span>
         </div>
         <div class="stopwatch-controls">
-          <button class="sw-btn" id="sw-start">START</button>
-          <button class="sw-btn sw-btn-reset" id="sw-reset">RESET</button>
+          <button class="sw-btn" id="sw-start" aria-label="Iniciar cronômetro (Space)">START</button>
+          <button class="sw-btn sw-btn-reset" id="sw-reset" aria-label="Resetar cronômetro (R)">RESET</button>
         </div>
+        <div class="sw-export-msg" id="sw-export-msg"></div>
       </div>
+
     </section>
 
     <nav class="toggle-wrap" aria-label="Alternar modo">
-      <button class="toggle-btn active" id="btn-neon" onclick="switchStyle('neon')">NEON</button>
-      <button class="toggle-btn" id="btn-cards" onclick="switchStyle('cards')">CARDS</button>
-      <button class="toggle-btn" id="btn-stopwatch" onclick="switchStyle('stopwatch')">TIMER</button>
+      <button class="toggle-btn active" id="btn-neon" aria-pressed="true">NEON</button>
+      <button class="toggle-btn" id="btn-cards" aria-pressed="false">CARDS</button>
+      <button class="toggle-btn" id="btn-stopwatch" aria-pressed="false">TIMER</button>
     </nav>
   </main>
 
-  <footer class="watermark">
+  <footer class="watermark" aria-label="Autor">
     <span class="wm-name">Belin7z</span>
     <span class="wm-sub">Jefferson Alves</span>
   </footer>
 
-  <div class="alarm-toast" id="alarm-toast">&#9200; ALARME!</div>
+  <!-- Toast de alarme -->
+  <div class="alarm-toast" id="alarm-toast" role="alert" aria-live="assertive">&#x23F0; ALARME!</div>
 
-  <script src="js/particles.js"></script>
-  <script src="js/clock.js"></script>
+  <script src="js/particles.js" defer></script>
+  <script src="js/clock.js" defer></script>
 </body>
 </html>
