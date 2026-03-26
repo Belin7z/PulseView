@@ -933,16 +933,26 @@ footer .author {
   }
 }
 
-/* =================== */
-/* CLOCK CENTERING */
-/* =================== */
-150
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding-top: 0;
-  padding-bottom: 0;
+
+/* =================== */
+/* DISABLE SELECTION */
+/* =================== */
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* =================== */
+/* FOOTER IMPROVEMENTS */
+/* =================== */
+footer .logo {
+  display: block;
+  margin-bottom: 8px;
+}
+
+footer .author {
+  display: block;
 }
