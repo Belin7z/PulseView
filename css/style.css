@@ -150,20 +150,18 @@ s-canvas {
 /* =================== */
 /* MAIN LAYOUT */
 /* =================== */
-800
-{
+.wrapper {
   position: relative;
   z-index: 10;
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
 }
-
 /* =================== */
 /* HEADER */
 /* =================== */
