@@ -3,38 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Belin7z Clock</title>
+  <meta name="description" content="PulseView — Relógio dinâmico com efeitos visuais modernos" />
+  <title>PulseView</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- Background -->
+  <!-- Canvas de partículas -->
   <canvas id="particles-canvas"></canvas>
+
+  <!-- Glows de fundo -->
   <div class="bg-glow glow-1"></div>
   <div class="bg-glow glow-2"></div>
+  <div class="bg-glow glow-3"></div>
 
-  <!-- Main -->
+  <!-- Scanlines overlay -->
+  <div class="scanlines"></div>
+
   <main class="wrapper">
 
     <!-- Header -->
     <header class="header">
-      <span class="header-tag">&lt; Belin7z /&gt;</span>
-      <span class="header-city">&#127477;&#127479; Bras&iacute;lia &bull; UTC-3</span>
+      <div class="header-logo">
+        <span class="logo-bracket">&lt;</span>
+        <span class="logo-name">Belin7z</span>
+        <span class="logo-slash">/</span>
+        <span class="logo-bracket">&gt;</span>
+      </div>
+      <div class="header-badge">
+        <span class="badge-dot"></span>
+        <span>PulseView</span>
+        <span class="badge-sep">•</span>
+        <span>&#127477;&#127479; Brasília</span>
+        <span class="badge-sep">•</span>
+        <span>UTC-3</span>
+      </div>
     </header>
 
-    <!-- Clock Display -->
+    <!-- Clock principal -->
     <section class="clock-section" id="clock-section">
 
       <!-- STYLE A: NEON -->
       <div class="clock clock-neon active" id="clock-neon">
         <div class="neon-time">
-          <span class="neon-digit" id="n-h">00</span>
+          <div class="neon-unit">
+            <span class="neon-digit" id="n-h">00</span>
+            <span class="neon-label">HORA</span>
+          </div>
           <span class="neon-sep">:</span>
-          <span class="neon-digit" id="n-m">00</span>
+          <div class="neon-unit">
+            <span class="neon-digit" id="n-m">00</span>
+            <span class="neon-label">MIN</span>
+          </div>
           <span class="neon-sep">:</span>
-          <span class="neon-digit" id="n-s">00</span>
+          <div class="neon-unit">
+            <span class="neon-digit" id="n-s">00</span>
+            <span class="neon-label">SEG</span>
+          </div>
+        </div>
+        <!-- Barra de progresso dos segundos -->
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progress-bar"></div>
         </div>
         <div class="clock-date" id="n-date">---</div>
       </div>
@@ -57,26 +88,30 @@
             <div class="card-label">SEG</div>
           </div>
         </div>
+        <!-- Barra de progresso dos segundos -->
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progress-bar-c"></div>
+        </div>
         <div class="clock-date" id="c-date">---</div>
       </div>
 
     </section>
 
-    <!-- Toggle -->
-    <div class="toggle-wrap">
+    <!-- Toggle de estilo -->
+    <nav class="toggle-wrap" aria-label="Alternar estilo do relógio">
       <button class="toggle-btn active" id="btn-neon" onclick="switchStyle('neon')">NEON</button>
       <button class="toggle-btn" id="btn-cards" onclick="switchStyle('cards')">CARDS</button>
-    </div>
+    </nav>
 
   </main>
 
   <!-- Watermark -->
-  <div class="watermark">
+  <footer class="watermark">
     <span class="wm-name">Belin7z</span>
     <span class="wm-sub">Jefferson Alves</span>
-  </div>
+  </footer>
 
-  <script src="particles.js"></script>
-  <script src="clock.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/clock.js"></script>
 </body>
 </html>
