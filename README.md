@@ -1,13 +1,13 @@
-# Hello World 🚀
+# PulseView 🚀
 
-**[>> Clique aqui para acessar a demo <<](https://belin7z.github.io/hello-world/)**
+**[>> Clique aqui para acessar a demo <<](https://belin7z.github.io/PulseView/)**
 Um site interativo e moderno que exibe a hora atual com um efeito parallax 3D dinâmico.
 
 ---
 
-## 📋 Descrição
+## 📝 Descrição
 
-Este é um projeto simples mas elegante que demonstra a combinação de **HTML, CSS e JavaScript** para criar uma experiência visual atraente. A página exibe "Hello World" e um relógio em tempo real que responde ao movimento do mouse com um efeito parallax 3D suave e fluido.
+Este é um projeto simples mas elegante que demonstra a combinação de **HTML, CSS e JavaScript** para criar uma experiência visual atraente. A página exibe "PulseView" e um relógio em tempo real que responde ao movimento do mouse com um efeito parallax 3D suave e fluido.
 
 ---
 
@@ -30,54 +30,5 @@ Este projeto foi criado como um **exercício prático** para:
 - Aprender e praticar **HTML, CSS e JavaScript**
 - Entender conceitos de **centralização com Flexbox**
 - Dominar **transformações 3D e perspectiva CSS**
-- Implementar **animações fluidas com** `requestAnimationFrame()`
+- Implementar **animações fluidas com `requestAnimationFrame()`**
 - Trabalhar com **Git e GitHub**
-
----
-
-## 🛠️ Como Usar
-
-### 1. **Clone o repositório:**
-
-```bash
-git clone https://github.com/Belin7z/hello-world.git
-cd hello-world
-```
-
-### 2. **Abra o arquivo HTML no navegador:**
-
-```bash
-open index.html
-# ou no Windows:
-start index.html
-```
-
-### 3. **Interaja com o relógio:**
-
-Mova o mouse sobre o relógio para ver o efeito parallax 3D em ação!
-
----
-
-## 🚀 Tecnologias Utilizadas
-
-- **HTML5** - Estrutura semântica
-- **CSS3** - Estilos avançados (Flexbox, Gradientes, Transformações 3D)
-- **JavaScript (Vanilla)** - Lógica de interatividade
-- **GitHub Pages** - Deploy e hospedagem
-
----
-
-## Atualizações
-
-### v1.1 - Jan 10, 2025
-
-**index.html:**
-- Estrutura HTML completa com suporte a parallax 3D
-->> {Add: Sistema de atualização de hora em tempo real com requestAnimationFrame()};
-->> }Add: Event listeners para mouse movement (parallax effect)};
-->> {Fix: Correção de renderização em diferentes resoluções};
-->> {Upd: Melhorias de performance no loop de animação};
-
----
-
-**Última atualização:** 10 de Janeiro de 2026
