@@ -117,9 +117,33 @@ body {
 .neon-label { font-size: 0.75rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; }
 
 /* Flip animation */
-.flip-container { transition: transform 0.6s; transform-style: preserve-3d; }
-.flip-container.flip { animation: flipDigit 0.6s ease-out; }
-@keyframes flipDigit { 0% { transform: rotateX(0deg); } 50% { transform: rotateX(90deg); } 100% { transform: rotateX(0deg); } }
+.flip-container { position: relative; display: inline-block; }
+.flip-front, .flip-back {
+    display: block;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+.flip-back {
+    position: absolute;
+    top: 0; left: 0; width: 100%;
+    transform: rotateX(-90deg);
+    transform-origin: center bottom;
+    opacity: 0;
+}
+.flip-container.flip .flip-front {
+    animation: flipOut 0.3s ease-in forwards;
+}
+.flip-container.flip .flip-back {
+    animation: flipIn 0.3s ease-out 0.3s forwards;
+}
+@keyframes flipOut {
+    0%   { transform: rotateX(0deg);   opacity: 1; }
+    100% { transform: rotateX(90deg);  opacity: 0; }
+}
+@keyframes flipIn {
+    0%   { transform: rotateX(-90deg); opacity: 0; }
+    100% { transform: rotateX(0deg);   opacity: 1; }
+}
 
 /* =================== */
 /* PROGRESS BAR        */

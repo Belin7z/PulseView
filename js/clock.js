@@ -124,14 +124,26 @@ const App = {
         if (!el) return;
 
         const prev = isCard ? el.textContent : this.state.prevClockValues[id.split('-')[1]];
-        if (val !== prev) {
+        if (val === prev) return;
+
+        if (flipId) {
+            const flipEl = document.getElementById(flipId);
+            const backEl = document.getElementById(`${id}-back`);
+            if (!flipEl || !backEl) { el.textContent = val; return; }
+
+            // Put new value on the back before animation starts
+            backEl.textContent = val;
+            flipEl.classList.remove('flip');
+            void flipEl.offsetWidth;
+            flipEl.classList.add('flip');
+
+            // After animation, update front and reset
+            setTimeout(() => {
+                el.textContent = val;
+                flipEl.classList.remove('flip');
+            }, 600);
+        } else {
             el.textContent = val;
-            if (flipId) {
-                const flipEl = document.getElementById(flipId);
-                flipEl?.classList.remove('flip');
-                void flipEl?.offsetWidth;
-                flipEl?.classList.add('flip');
-            }
         }
     },
 
