@@ -3,14 +3,15 @@
  * Enables offline functionality and caching
  */
 
-const CACHE_NAME = 'pulseview-v1.0.0';
+const CACHE_NAME = 'pulseview-v1.0.1';
+const BASE = '/PulseView';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/js/clock.js',
-  '/js/particles.js',
-  '/manifest.json'
+  `${BASE}/`,
+  `${BASE}/index.html`,
+  `${BASE}/css/style.css`,
+  `${BASE}/js/clock.js`,
+  `${BASE}/js/particles.js`,
+  `${BASE}/manifest.json`
 ];
 
 // Install event - cache assets

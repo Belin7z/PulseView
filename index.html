@@ -226,6 +226,14 @@
 
     <div class="alarm-toast" id="alarm-toast" role="alert" aria-live="assertive">⏰ ALARME!</div>
 
+    <script src="js/particles.js" defer></script>
     <script src="js/clock.js" defer></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/PulseView/sw.js', { scope: '/PulseView/' });
+            });
+        }
+    </script>
 </body>
 </html>

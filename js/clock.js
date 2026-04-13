@@ -293,8 +293,8 @@ const App = {
     triggerAlarm(msg) {
         this.playAlarmSound();
         this.showToast(msg);
-        document.body.classList.add('alarm-flashing');
-        setTimeout(() => document.body.classList.remove('alarm-flashing'), 6000);
+        document.body.classList.add('alarm-pulsing');
+        setTimeout(() => document.body.classList.remove('alarm-pulsing'), 6000);
     },
 
     // ===================
@@ -385,8 +385,8 @@ const App = {
         const toast = document.getElementById('alarm-toast');
         if (!toast) return;
         toast.textContent = msg;
-        toast.classList.add('visible');
-        setTimeout(() => toast.classList.remove('visible'), 5000);
+        toast.classList.add('active');
+        setTimeout(() => toast.classList.remove('active'), 5000);
     },
 
     loadSettings() {

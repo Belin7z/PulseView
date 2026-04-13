@@ -3,20 +3,21 @@
   "short_name": "PulseView",
   "description": "Relogio gamer com efeitos visuais modernos",
   "start_url": "/PulseView/",
+  "scope": "/PulseView/",
   "display": "standalone",
   "background_color": "#030008",
   "theme_color": "#7c3aed",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "https://via.placeholder.com/192x192/7c3aed/ffffff?text=PV",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%237c3aed'/%3E%3Ctext x='96' y='130' font-family='monospace' font-weight='900' font-size='80' text-anchor='middle' fill='white'%3EPV%3C/text%3E%3C/svg%3E",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/svg+xml"
     },
     {
-      "src": "https://via.placeholder.com/512x512/7c3aed/ffffff?text=PV",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='80' fill='%237c3aed'/%3E%3Ctext x='256' y='340' font-family='monospace' font-weight='900' font-size='200' text-anchor='middle' fill='white'%3EPV%3C/text%3E%3C/svg%3E",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/svg+xml"
     }
   ]
 }

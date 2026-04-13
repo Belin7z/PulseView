@@ -160,8 +160,9 @@ body {
 /* =================== */
 /* WATERMARK           */
 /* =================== */
-.watermark { position: fixed; bottom: 2rem; right: 2rem; text-align: right; z-index: 10; transition: opacity 0.3s; }
+.watermark { position: fixed; bottom: 2rem; right: 2rem; text-align: right; z-index: 10; transition: opacity 0.3s; display: flex; flex-direction: column; gap: 0.2rem; }
 .wm-name { font-size: 1rem; font-weight: 700; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+.wm-sub { font-size: 0.7rem; color: var(--text-dim); }
 
 /* =================== */
 /* SETTINGS PANEL      */
@@ -200,6 +201,9 @@ body {
 
 .alarm-toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; padding: 1.5rem 3rem; border-radius: 12px; font-size: 1.5rem; font-weight: 900; font-family: 'Orbitron'; box-shadow: 0 10px 40px rgba(220, 38, 38, 0.6); z-index: 10000; transition: top 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
 .alarm-toast.active { top: 2rem; }
+
+/* Body alarm pulse */
+body.alarm-pulsing { animation: alarmPulseBorder 1s infinite alternate; }
 
 /* Responsive */
 @media (max-width: 768px) {

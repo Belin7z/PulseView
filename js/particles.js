@@ -1,10 +1,16 @@
 // PulseView Particles - Stars + Gamer particles + Visibility pause
 
-const COLORS = [
-  'rgba(168, 85, 247, 0.8)',
-  'rgba(192, 38, 211, 0.7)',
-  'rgba(139, 92, 246, 0.8)',
-  'rgba(217, 70, 239, 0.6)',
+function getThemeColor(alpha = 0.8) {
+  const style = getComputedStyle(document.body);
+  const rgb = style.getPropertyValue('--glow-rgb').trim() || '168, 85, 247';
+  return `rgba(${rgb}, ${alpha})`;
+}
+
+const COLORS = () => [
+  getThemeColor(0.8),
+  getThemeColor(0.6),
+  getThemeColor(0.7),
+  getThemeColor(0.5),
 ];
 
 class Star {
@@ -45,7 +51,7 @@ class Particle {
     this.vx = (Math.random() - 0.5) * 1.2;
     this.vy = (Math.random() - 0.5) * 1.2;
     this.radius = Math.random() * 1.8 + 0.5;
-    this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.color = COLORS()[Math.floor(Math.random() * 4)];
   }
   update() {
     this.x += this.vx;
@@ -106,7 +112,7 @@ class ParticleSystem {
         if (dist < this.connectionDistance) {
           const alpha = (1 - dist / this.connectionDistance) * 0.35;
           this.ctx.beginPath();
-          this.ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
+          this.ctx.strokeStyle = getThemeColor(alpha);
           this.ctx.lineWidth = 0.6;
           this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
           this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
