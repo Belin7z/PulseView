@@ -182,9 +182,25 @@ body {
 /* =================== */
 /* WATERMARK           */
 /* =================== */
-.watermark { position: fixed; bottom: 2rem; right: 2rem; text-align: right; z-index: 10; transition: opacity 0.3s; display: flex; flex-direction: column; gap: 0.2rem; }
+.watermark { position: fixed; bottom: 2rem; right: 2rem; text-align: right; z-index: 10; transition: all 0.3s; display: flex; flex-direction: column; gap: 0.3rem; }
+.watermark:hover { transform: translateY(-5px); }
 .wm-name { font-size: 1rem; font-weight: 700; color: var(--primary); text-shadow: 0 0 10px var(--primary); }
-.wm-sub { font-size: 0.7rem; color: var(--text-dim); }
+.wm-sub { 
+    font-size: 1.1rem; 
+    font-weight: 900; 
+    font-family: 'Orbitron', sans-serif;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(var(--glow-rgb), 0.6);
+    letter-spacing: 0.1em;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+@keyframes glow {
+    from { filter: drop-shadow(0 0 5px rgba(var(--glow-rgb), 0.5)); }
+    to { filter: drop-shadow(0 0 15px rgba(var(--glow-rgb), 0.9)); }
+}
 
 /* =================== */
 /* SETTINGS PANEL      */
