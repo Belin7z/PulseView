@@ -1,6 +1,6 @@
 /**
  * PulseView - Main Logic Module
- * Features: Neon/Cards Clock, Pomodoro, Stopwatch, Multi-Alarms, Themes
+ * Features: Neon/Cards Clock, Pomodoro, Stopwatch, Multi-Alarms, Themes, Tutorial
  * @author Belin7z (Jefferson Alves)
  */
 
@@ -9,6 +9,7 @@
 // ===================
 const THEMES = ['purple', 'cyan', 'red', 'green', 'minimal'];
 const STORAGE_KEY = 'pulseview-settings-v2';
+const TUTORIAL_KEY = 'pulseview-tutorial-seen';
 const ALARM_SOUND = 'https://assets.mixkit.co/active_storage/sfx/1016/1016-preview.mp3';
 
 const App = {
@@ -42,7 +43,8 @@ const App = {
         },
         prevClockValues: { h: '', m: '', s: '' },
         audio: null,
-        rafClockId: null
+        rafClockId: null,
+        tooltipTimeout: null
     },
 
     init() {
@@ -50,11 +52,13 @@ const App = {
         this.setupAudio();
         this.setupEventListeners();
         this.setupKeyboardShortcuts();
+        this.setupTooltips();
         this.updateVisibility();
         this.renderAlarms();
         this.startClock();
         this.applyTheme(this.settings.theme);
         this.switchMode(this.settings.activeMode);
+        this.checkTutorial();
         
         console.log('PulseView initialized 🚀');
     },
@@ -88,20 +92,17 @@ const App = {
 
         let h = get('hour'), m = get('minute'), s = get('second');
 
-        // Neon Mode
+        // Update UI
         this.updateDigit('n-h', h, 'n-h-flip');
         this.updateDigit('n-m', m, 'n-m-flip');
         this.updateDigit('n-s', s, 'n-s-flip');
-
-        // Cards Mode
         this.updateDigit('c-h', h, null, true);
         this.updateDigit('c-m', m, null, true);
         this.updateDigit('c-s', s, null, true);
 
-        // Progress Bars
+        // Progress
         const progress = (parseInt(s) / 60) * 100;
-        const bars = ['progress-bar', 'progress-bar-c'];
-        bars.forEach(id => {
+        ['progress-bar', 'progress-bar-c'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.style.width = `${progress}%`;
         });
@@ -127,9 +128,9 @@ const App = {
             el.textContent = val;
             if (flipId) {
                 const flipEl = document.getElementById(flipId);
-                flipEl?.classList.remove('flip-anim');
+                flipEl?.classList.remove('flip');
                 void flipEl?.offsetWidth;
-                flipEl?.classList.add('flip-anim');
+                flipEl?.classList.add('flip');
             }
         }
     },
@@ -139,11 +140,7 @@ const App = {
     // ===================
     
     togglePomodoro() {
-        if (this.state.pomodoro.isRunning) {
-            this.pausePomodoro();
-        } else {
-            this.startPomodoro();
-        }
+        this.state.pomodoro.isRunning ? this.pausePomodoro() : this.startPomodoro();
     },
 
     startPomodoro() {
@@ -184,7 +181,8 @@ const App = {
 
     handlePomodoroEnd() {
         this.pausePomodoro();
-        this.playAlarmSound();
+        this.triggerAlarm(`Pomodoro: ${this.state.pomodoro.mode.toUpperCase()} ENDED`);
+        
         if (this.state.pomodoro.mode === 'focus') {
             this.state.pomodoro.sessions++;
             this.updatePomoSessionsUI();
@@ -192,7 +190,6 @@ const App = {
         } else {
             this.setPomodoroMode('focus');
         }
-        alert(`Pomodoro Session Ended: ${this.state.pomodoro.mode}`);
     },
 
     updatePomoSessionsUI() {
@@ -207,11 +204,7 @@ const App = {
     // ===================
     
     toggleStopwatch() {
-        if (this.state.stopwatch.isRunning) {
-            this.pauseStopwatch();
-        } else {
-            this.startStopwatch();
-        }
+        this.state.stopwatch.isRunning ? this.pauseStopwatch() : this.startStopwatch();
     },
 
     startStopwatch() {
@@ -259,15 +252,13 @@ const App = {
     addAlarm() {
         const input = document.getElementById('alarm-time');
         const time = input.value;
-        if (!time) return;
+        if (!time || this.settings.alarms.includes(time)) return;
 
-        if (!this.settings.alarms.includes(time)) {
-            this.settings.alarms.push(time);
-            this.settings.alarms.sort();
-            this.saveSettings();
-            this.renderAlarms();
-            this.showToast('Alarme adicionado!');
-        }
+        this.settings.alarms.push(time);
+        this.settings.alarms.sort();
+        this.saveSettings();
+        this.renderAlarms();
+        this.showToast('Alarme adicionado!');
         input.value = '';
     },
 
@@ -280,13 +271,12 @@ const App = {
     renderAlarms() {
         const list = document.getElementById('alarm-list');
         if (!list) return;
-        
-        list.innerHTML = this.settings.alarms.map(time => \`
+        list.innerHTML = this.settings.alarms.map(time => `
             <div class="alarm-item">
-                <span>\${time}</span>
-                <button onclick="App.removeAlarm('\${time}')" aria-label="Remover">✕</button>
+                <span class="alarm-item-time">${time}</span>
+                <button class="alarm-item-delete" onclick="App.removeAlarm('${time}')">✕</button>
             </div>
-        \`).join('');
+        `).join('');
     },
 
     checkAlarms() {
@@ -294,36 +284,72 @@ const App = {
         const currentTime = now.toLocaleTimeString('pt-BR', { 
             hour: '2-digit', minute: '2-digit', hour12: false, timeZone: this.settings.timezone 
         });
-        const currentSeconds = now.getSeconds();
-
-        if (currentSeconds === 0 && this.settings.alarms.includes(currentTime)) {
-            this.triggerAlarm(currentTime);
+        
+        if (now.getSeconds() === 0 && this.settings.alarms.includes(currentTime)) {
+            this.triggerAlarm(`ALARME: ${currentTime}`);
         }
     },
 
-    triggerAlarm(time) {
+    triggerAlarm(msg) {
         this.playAlarmSound();
-        this.showToast(\`⏰ ALARME: \${time}\`);
-        // Visual feedback
+        this.showToast(msg);
         document.body.classList.add('alarm-flashing');
-        setTimeout(() => document.body.classList.remove('alarm-flashing'), 5000);
+        setTimeout(() => document.body.classList.remove('alarm-flashing'), 6000);
     },
 
     // ===================
-    // UI & SETTINGS
+    // TUTORIAL & TOOLTIPS
+    // ===================
+    
+    checkTutorial() {
+        if (!localStorage.getItem(TUTORIAL_KEY)) {
+            const overlay = document.getElementById('tutorial-overlay');
+            if (overlay) overlay.style.display = 'flex';
+        }
+    },
+
+    closeTutorial() {
+        document.getElementById('tutorial-overlay').style.display = 'none';
+        localStorage.setItem(TUTORIAL_KEY, 'true');
+    },
+
+    setupTooltips() {
+        const tooltips = document.querySelectorAll('[data-tooltip]');
+        tooltips.forEach(el => {
+            el.addEventListener('mouseenter', (e) => {
+                const text = el.dataset.tooltip;
+                const tip = document.createElement('div');
+                tip.className = 'tooltip tooltip-top';
+                tip.textContent = text;
+                document.body.appendChild(tip);
+
+                const rect = el.getBoundingClientRect();
+                tip.style.left = `${rect.left + rect.width / 2 - tip.offsetWidth / 2}px`;
+                tip.style.top = `${rect.top - tip.offsetHeight - 10}px`;
+                
+                el._tooltip = tip;
+            });
+
+            el.addEventListener('mouseleave', () => {
+                if (el._tooltip) {
+                    el._tooltip.remove();
+                    el._tooltip = null;
+                }
+            });
+        });
+    },
+
+    // ===================
+    // HELPERS & UI
     // ===================
     
     switchMode(mode) {
         this.settings.activeMode = mode;
         this.saveSettings();
-
-        // Update sections
         document.querySelectorAll('.clock').forEach(el => el.classList.remove('active'));
-        document.getElementById(\`clock-\${mode}\`)?.classList.add('active');
-
-        // Update buttons
+        document.getElementById(`clock-${mode}`)?.classList.add('active');
         document.querySelectorAll('.toggle-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.id === \`btn-\${mode}\`);
+            btn.classList.toggle('active', btn.id === `btn-${mode}`);
         });
     },
 
@@ -331,11 +357,8 @@ const App = {
         this.settings.theme = theme;
         document.body.dataset.theme = theme;
         this.saveSettings();
-
         document.querySelectorAll('.theme-btn').forEach(btn => {
-            const isActive = btn.dataset.theme === theme;
-            btn.classList.toggle('active', isActive);
-            btn.setAttribute('aria-pressed', isActive);
+            btn.classList.toggle('active', btn.dataset.theme === theme);
         });
     },
 
@@ -345,29 +368,17 @@ const App = {
             const mod = input.dataset.module;
             const isVisible = this.settings.visibility[mod];
             input.checked = isVisible;
-            
-            // Toggle visibility of the nav button
-            const navBtn = document.getElementById(\`btn-\${mod}\`);
+            const navBtn = document.getElementById(`btn-${mod}`);
             if (navBtn) navBtn.style.display = isVisible ? 'block' : 'none';
         });
     },
 
-    toggleModuleVisibility(mod, isVisible) {
-        this.settings.visibility[mod] = isVisible;
-        this.saveSettings();
-        this.updateVisibility();
-    },
-
-    // ===================
-    // HELPERS
-    // ===================
-    
     setupAudio() {
         this.state.audio = new Audio(ALARM_SOUND);
     },
 
     playAlarmSound() {
-        this.state.audio?.play().catch(e => console.warn('Audio play blocked:', e));
+        this.state.audio?.play().catch(() => {});
     },
 
     showToast(msg) {
@@ -375,40 +386,33 @@ const App = {
         if (!toast) return;
         toast.textContent = msg;
         toast.classList.add('visible');
-        setTimeout(() => toast.classList.remove('visible'), 4000);
+        setTimeout(() => toast.classList.remove('visible'), 5000);
     },
 
     loadSettings() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                this.settings = { ...this.settings, ...parsed };
-                // Ensure visibility object exists
-                if (!this.settings.visibility) this.settings.visibility = { neon: true, cards: true, pomodoro: true, stopwatch: true };
-            } catch (e) {
-                console.error('Error loading settings:', e);
-            }
+            this.settings = { ...this.settings, ...JSON.parse(saved) };
         }
-        
-        // Sync Initial UI
         const tzSelect = document.getElementById('tz-select');
         if (tzSelect) tzSelect.value = this.settings.timezone;
-        
-        const badgeTz = document.getElementById('badge-tz');
-        if (badgeTz) badgeTz.textContent = this.settings.timezone.split('/').pop().replace('_', ' ');
+        this.updateTzBadge();
     },
 
     saveSettings() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.settings));
     },
 
+    updateTzBadge() {
+        const badge = document.getElementById('badge-tz');
+        if (badge) badge.textContent = this.settings.timezone.split('/').pop().replace('_', ' ');
+    },
+
     setupEventListeners() {
-        // Mode Selectors
-        document.getElementById('btn-neon')?.addEventListener('click', () => this.switchMode('neon'));
-        document.getElementById('btn-cards')?.addEventListener('click', () => this.switchMode('cards'));
-        document.getElementById('btn-pomodoro')?.addEventListener('click', () => this.switchMode('pomodoro'));
-        document.getElementById('btn-stopwatch')?.addEventListener('click', () => this.switchMode('stopwatch'));
+        // Modes
+        ['neon', 'cards', 'pomodoro', 'stopwatch'].forEach(m => {
+            document.getElementById(`btn-${m}`)?.addEventListener('click', () => this.switchMode(m));
+        });
 
         // Settings Panel
         const panel = document.getElementById('settings-panel');
@@ -449,14 +453,15 @@ const App = {
         document.getElementById('tz-select')?.addEventListener('change', (e) => {
             this.settings.timezone = e.target.value;
             this.saveSettings();
-            const badgeTz = document.getElementById('badge-tz');
-            if (badgeTz) badgeTz.textContent = e.target.value.split('/').pop().replace('_', ' ');
+            this.updateTzBadge();
         });
 
-        // Visibility Toggles
+        // Visibility
         document.querySelectorAll('.visibility-toggles input').forEach(input => {
             input.addEventListener('change', (e) => {
-                this.toggleModuleVisibility(e.target.dataset.module, e.target.checked);
+                this.settings.visibility[e.target.dataset.module] = e.target.checked;
+                this.saveSettings();
+                this.updateVisibility();
             });
         });
 
@@ -472,30 +477,26 @@ const App = {
         document.getElementById('sw-start')?.addEventListener('click', () => this.toggleStopwatch());
         document.getElementById('sw-reset')?.addEventListener('click', () => this.resetStopwatch());
 
-        // Extras
+        // Tutorial
+        document.getElementById('tutorial-close')?.addEventListener('click', () => this.closeTutorial());
+
+        // Fullscreen & Export
         document.getElementById('btn-fullscreen')?.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
-            } else if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
         });
         
         document.getElementById('btn-export')?.addEventListener('click', () => {
-            const data = JSON.stringify(this.settings, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
+            const blob = new Blob([JSON.stringify(this.settings, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
-            a.href = url;
-            a.download = \`pulseview-settings-\${new Date().getTime()}.json\`;
+            a.href = URL.createObjectURL(blob);
+            a.download = `pulseview-config.json`;
             a.click();
-            URL.revokeObjectURL(url);
         });
     },
 
     setupKeyboardShortcuts() {
         window.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+            if (['INPUT', 'SELECT'].includes(e.target.tagName)) return;
 
             switch(e.code) {
                 case 'Space':
@@ -522,5 +523,4 @@ const App = {
     }
 };
 
-// Initialize App
 document.addEventListener('DOMContentLoaded', () => App.init());
