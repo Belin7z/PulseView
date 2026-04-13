@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
     <!-- SEO -->
-    <meta name="description" content="PulseView — Relógio gamer com temas neon, cronômetro, alarme e suporte a múltiplos fusos horários." />
+    <meta name="description" content="PulseView — Relógio gamer com temas neon, pomodoro, cronômetro, alarme e suporte a múltiplos fusos horários." />
     <meta name="author" content="Belin7z" />
     <meta name="theme-color" content="#7c3aed" />
-
+    
     <!-- Open Graph -->
     <meta property="og:title" content="PulseView" />
-    <meta property="og:description" content="Relógio gamer com visual neon, cronômetro, alarme e temas de cor." />
+    <meta property="og:description" content="Relógio gamer com visual neon, pomodoro, cronômetro, alarme e temas de cor." />
     <meta property="og:url" content="https://belin7z.github.io/PulseView/" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
-
+    
     <title>PulseView</title>
-
+    
     <!-- PWA -->
     <link rel="manifest" href="manifest.json" />
-
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -43,56 +43,82 @@
             <button class="settings-close" id="settings-close" aria-label="Fechar configurações">✕</button>
         </div>
 
-        <div class="settings-group">
-            <label class="settings-label">TEMA DE COR</label>
-            <div class="color-themes" role="group" aria-label="Temas de cor">
-                <button class="theme-btn active" data-theme="purple" title="Roxo" aria-label="Tema Roxo"></button>
-                <button class="theme-btn" data-theme="cyan" title="Ciano" aria-label="Tema Ciano"></button>
-                <button class="theme-btn" data-theme="red" title="Vermelho" aria-label="Tema Vermelho"></button>
-                <button class="theme-btn" data-theme="green" title="Verde Matrix" aria-label="Tema Verde"></button>
-                <button class="theme-btn" data-theme="minimal" title="Minimalista" aria-label="Tema Minimalista"></button>
+        <div class="settings-scroll-area">
+            <div class="settings-group">
+                <label class="settings-label">TEMA DE COR</label>
+                <div class="color-themes" role="group" aria-label="Temas de cor">
+                    <button class="theme-btn active" data-theme="purple" title="Roxo" aria-label="Tema Roxo"></button>
+                    <button class="theme-btn" data-theme="cyan" title="Ciano" aria-label="Tema Ciano"></button>
+                    <button class="theme-btn" data-theme="red" title="Vermelho" aria-label="Tema Vermelho"></button>
+                    <button class="theme-btn" data-theme="green" title="Verde Matrix" aria-label="Tema Verde"></button>
+                    <button class="theme-btn" data-theme="minimal" title="Minimalista" aria-label="Tema Minimalista"></button>
+                </div>
             </div>
-        </div>
 
-        <div class="settings-group">
-            <label class="settings-label">FORMATO DE HORA</label>
-            <div class="toggle-format" role="group">
-                <button class="fmt-btn active" id="fmt-24" aria-label="Formato 24 horas">24H</button>
-                <button class="fmt-btn" id="fmt-12" aria-label="Formato 12 horas">12H</button>
+            <div class="settings-group">
+                <label class="settings-label">FORMATO DE HORA</label>
+                <div class="toggle-format" role="group">
+                    <button class="fmt-btn active" id="fmt-24" aria-label="Formato 24 horas">24H</button>
+                    <button class="fmt-btn" id="fmt-12" aria-label="Formato 12 horas">12H</button>
+                </div>
             </div>
-        </div>
 
-        <div class="settings-group">
-            <label class="settings-label" for="tz-select">FUSO HORÁRIO</label>
-            <select class="tz-select" id="tz-select">
-                <option value="America/Sao_Paulo">Brasil (BRT)</option>
-                <option value="America/New_York">New York (ET)</option>
-                <option value="America/Los_Angeles">Los Angeles (PT)</option>
-                <option value="Europe/London">Londres (GMT)</option>
-                <option value="Europe/Paris">Paris (CET)</option>
-                <option value="Asia/Tokyo">Tokyo (JST)</option>
-                <option value="Asia/Seoul">Seoul (KST)</option>
-                <option value="UTC">UTC</option>
-            </select>
-        </div>
-
-        <div class="settings-group">
-            <label class="settings-label" for="alarm-time">ALARME</label>
-            <div class="alarm-row">
-                <input class="alarm-input" type="time" id="alarm-time" aria-label="Horário do alarme" />
-                <button class="alarm-btn" id="alarm-toggle">ATIVAR</button>
+            <div class="settings-group">
+                <label class="settings-label" for="tz-select">FUSO HORÁRIO</label>
+                <select class="tz-select" id="tz-select">
+                    <option value="America/Sao_Paulo">Brasil (BRT)</option>
+                    <option value="America/New_York">New York (ET)</option>
+                    <option value="America/Los_Angeles">Los Angeles (PT)</option>
+                    <option value="Europe/London">Londres (GMT)</option>
+                    <option value="Europe/Paris">Paris (CET)</option>
+                    <option value="Asia/Tokyo">Tokyo (JST)</option>
+                    <option value="Asia/Seoul">Seoul (KST)</option>
+                    <option value="UTC">UTC</option>
+                </select>
             </div>
-            <div class="alarm-status" id="alarm-status" role="status" aria-live="polite"></div>
-        </div>
 
-        <div class="settings-group">
-            <label class="settings-label">EXTRAS</label>
-            <div class="extras-row">
-                <button class="extra-btn" id="btn-fullscreen" title="Tela cheia (F)">⛶ FULLSCREEN</button>
-                <button class="extra-btn" id="btn-export-sw" title="Exportar tempo">⬇ EXPORTAR</button>
+            <div class="settings-group">
+                <label class="settings-label">VISIBILIDADE DOS MÓDULOS</label>
+                <div class="visibility-toggles">
+                    <label class="toggle-item">
+                        <span>Relógio Neon</span>
+                        <input type="checkbox" checked data-module="neon">
+                    </label>
+                    <label class="toggle-item">
+                        <span>Relógio Cards</span>
+                        <input type="checkbox" checked data-module="cards">
+                    </label>
+                    <label class="toggle-item">
+                        <span>Pomodoro</span>
+                        <input type="checkbox" checked data-module="pomodoro">
+                    </label>
+                    <label class="toggle-item">
+                        <span>Cronômetro</span>
+                        <input type="checkbox" checked data-module="stopwatch">
+                    </label>
+                </div>
             </div>
-            <div class="shortcuts-hint">
-                <kbd>Space</kbd> Start/Pause &nbsp; <kbd>R</kbd> Reset &nbsp; <kbd>T</kbd> Tema &nbsp; <kbd>S</kbd> Config
+
+            <div class="settings-group">
+                <label class="settings-label">ALARMES</label>
+                <div class="alarm-row">
+                    <input class="alarm-input" type="time" id="alarm-time" aria-label="Horário do alarme" />
+                    <button class="alarm-btn" id="alarm-add">ADICIONAR</button>
+                </div>
+                <div class="alarm-list" id="alarm-list">
+                    <!-- Alarms will be injected here -->
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label class="settings-label">EXTRAS</label>
+                <div class="extras-row">
+                    <button class="extra-btn" id="btn-fullscreen" title="Tela cheia (F)">⛶ FULLSCREEN</button>
+                    <button class="extra-btn" id="btn-export" title="Exportar dados (JSON)">⬇ EXPORTAR</button>
+                </div>
+                <div class="shortcuts-hint">
+                    <kbd>Space</kbd> Start/Pause &nbsp; <kbd>R</kbd> Reset &nbsp; <kbd>T</kbd> Tema &nbsp; <kbd>S</kbd> Config
+                </div>
             </div>
         </div>
     </aside>
@@ -154,6 +180,25 @@
                 <div class="clock-date" id="c-date" aria-live="polite">---</div>
             </div>
 
+            <!-- POMODORO MODE -->
+            <div class="clock clock-pomodoro" id="clock-pomodoro" role="timer">
+                <div class="pomo-status" id="pomo-status">FOCUS</div>
+                <div class="pomo-display">
+                    <span id="pomo-m">25</span>:<span id="pomo-s">00</span>
+                </div>
+                <div class="pomo-controls">
+                    <button class="pomo-btn" id="pomo-start">START</button>
+                    <button class="pomo-btn" id="pomo-reset">RESET</button>
+                    <button class="pomo-btn" id="pomo-skip">SKIP</button>
+                </div>
+                <div class="pomo-sessions" id="pomo-sessions">
+                    <span class="session-dot"></span>
+                    <span class="session-dot"></span>
+                    <span class="session-dot"></span>
+                    <span class="session-dot"></span>
+                </div>
+            </div>
+
             <!-- TIMER MODE (STOPWATCH) -->
             <div class="clock clock-stopwatch" id="clock-stopwatch" role="timer">
                 <div class="stopwatch-display">
@@ -169,6 +214,7 @@
         <nav class="toggle-wrap" aria-label="Modos de visualização">
             <button class="toggle-btn active" id="btn-neon">NEON</button>
             <button class="toggle-btn" id="btn-cards">CARDS</button>
+            <button class="toggle-btn" id="btn-pomodoro">POMODORO</button>
             <button class="toggle-btn" id="btn-stopwatch">TIMER</button>
         </nav>
     </main>
