@@ -93,9 +93,9 @@ const App = {
         let h = get('hour'), m = get('minute'), s = get('second');
 
         // Update UI
-        this.updateDigit('n-h', h, 'n-h-flip');
-        this.updateDigit('n-m', m, 'n-m-flip');
-        this.updateDigit('n-s', s, 'n-s-flip');
+        this.updateDigit('n-h', h);
+        this.updateDigit('n-m', m);
+        this.updateDigit('n-s', s);
         this.updateDigit('c-h', h, null, true);
         this.updateDigit('c-m', m, null, true);
         this.updateDigit('c-s', s, null, true);
@@ -122,38 +122,13 @@ const App = {
     updateDigit(id, val, flipId, isCard = false) {
         const el = document.getElementById(id);
         if (!el) return;
-
         const prev = isCard ? el.textContent : this.state.prevClockValues[id.split('-')[1]];
         if (val === prev) return;
-
-        if (flipId) {
-            const flipEl = document.getElementById(flipId);
-            const backEl = document.getElementById(`${id}-back`);
-            if (!flipEl || !backEl) { el.textContent = val; return; }
-
-            // Fix container size to prevent layout shift
-            if (!flipEl.style.width) {
-                flipEl.style.width  = `${flipEl.offsetWidth}px`;
-                flipEl.style.height = `${flipEl.offsetHeight}px`;
-            }
-
-            backEl.textContent = val;
-            flipEl.classList.remove('flip');
-            void flipEl.offsetWidth;
-            flipEl.classList.add('flip');
-
-            setTimeout(() => {
-                el.textContent = val;
-                flipEl.classList.remove('flip');
-            }, 500);
-        } else {
-            // Cards: fade out → troca → fade in
-            el.classList.add('changing');
-            setTimeout(() => {
-                el.textContent = val;
-                el.classList.remove('changing');
-            }, 150);
-        }
+        el.classList.add('changing');
+        setTimeout(() => {
+            el.textContent = val;
+            el.classList.remove('changing');
+        }, 150);
     },
 
     // ===================

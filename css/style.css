@@ -116,31 +116,9 @@ body {
 @keyframes blink { 0%, 49%, 100% { opacity: 0.8; } 50%, 99% { opacity: 0.2; } }
 .neon-label { font-size: 0.75rem; font-weight: 700; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; }
 
-/* Flip animation */
-.flip-container { position: relative; overflow: hidden; }
-.flip-front, .flip-back {
-    display: block;
-    line-height: 1;
-}
-.flip-back {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    transform: translateY(60%) scaleY(0.4);
-    opacity: 0;
-    pointer-events: none;
-}
-.flip-container.flip .flip-front {
-    animation: slideOut 0.25s ease-in forwards;
-}
-.flip-container.flip .flip-back {
-    animation: slideIn 0.25s ease-out 0.2s forwards;
-}
-@keyframes slideOut {
-    to { transform: translateY(-60%) scaleY(0.4); opacity: 0; }
-}
-@keyframes slideIn {
-    to { transform: translateY(0) scaleY(1); opacity: 1; }
-}
+/* Digit transition */
+.neon-digit { transition: opacity 0.15s ease, transform 0.15s ease; }
+.neon-digit.changing { opacity: 0; transform: translateY(-8px) scaleY(0.7); }
 
 /* =================== */
 /* PROGRESS BAR        */
@@ -231,6 +209,24 @@ body {
 
 .fmt-btn, .alarm-btn, .extra-btn { flex: 1; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); color: var(--text-dim); padding: 0.8rem; border-radius: 8px; font-family: 'JetBrains Mono'; font-weight: 700; cursor: pointer; transition: all 0.3s; font-size: 0.85rem; }
 .fmt-btn.active, .extra-btn:active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+.toggle-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: var(--text-dim); cursor: pointer; }
+.toggle-item input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
+.alarm-row { display: flex; gap: 0.8rem; margin-bottom: 0.8rem; }
+.shortcuts-hint { margin-top: 1rem; font-size: 0.75rem; color: var(--text-dim); line-height: 2; }
+.shortcuts-hint kbd { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; padding: 0.1rem 0.4rem; font-family: 'JetBrains Mono'; font-size: 0.75rem; color: var(--primary); }
+
+/* =================== */
+/* POMODORO            */
+/* =================== */
+.pomo-status { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.3em; color: var(--text-dim); }
+.pomo-display { font-size: clamp(4rem, 15vw, 8rem); font-family: 'Orbitron', sans-serif; font-weight: 900; color: var(--primary); text-shadow: 0 0 20px rgba(var(--glow-rgb), 0.6); line-height: 1; }
+.pomo-controls { display: flex; gap: 1rem; }
+.pomo-btn { background: rgba(var(--glow-rgb), 0.1); border: 2px solid var(--primary); color: var(--primary); padding: 0.8rem 2rem; border-radius: 10px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.3s; letter-spacing: 0.1em; font-family: 'JetBrains Mono'; }
+.pomo-btn:hover { background: var(--primary); color: #fff; box-shadow: 0 0 20px rgba(var(--glow-rgb), 0.5); }
+.pomo-sessions { display: flex; gap: 0.8rem; }
+.session-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--primary); transition: background 0.3s; }
+.session-dot.active { background: var(--primary); box-shadow: 0 0 8px rgba(var(--glow-rgb), 0.8); }
 
 .tz-select, .alarm-input { width: 100%; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); color: #fff; padding: 0.8rem; border-radius: 8px; font-family: 'JetBrains Mono'; font-size: 0.9rem; }
 
