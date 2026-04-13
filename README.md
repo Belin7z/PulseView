@@ -1,68 +1,62 @@
-# PulseView
+# ⚡ PulseView
 
-**[>> demo ao vivo <<](https://belin7z.github.io/PulseView/)**
+[![Live Demo](https://img.shields.io/badge/demo-ao%20vivo-7c3aed?style=for-the-badge&logo=google-chrome&logoColor=white)](https://belin7z.github.io/PulseView/)
+[![GitHub license](https://img.shields.io/github/license/Belin7z/PulseView?style=for-the-badge)](https://github.com/Belin7z/PulseView/blob/main/LICENSE)
 
-um relógio digital feito do zero com HTML, CSS e JS puro. sem frameworks, sem dependências. só código.
-
----
-
-## o que é isso
-
-comecei esse projeto pra praticar e foi crescendo. hoje tem tema, cronômetro, alarme, fuso horário, partículas no fundo, modo PWA... virou uma bagunça boa.
-
-a ideia principal é exibir a hora atual com um visual gamer — fundo escuro, neon roxo, fonte monospace, aquele estilo.
+Um relógio digital de alto desempenho feito com **Vanilla JS**, focado em estética gamer e utilidade. Sem frameworks, sem dependências, apenas código puro.
 
 ---
 
-## funcionalidades
+## 🚀 O que é isso?
 
-- relógio em tempo real (HH:MM:SS)
-- troca de temas: roxo, ciano, vermelho e verde
-- seletor de fuso horário (Brasília, UTC, Tokyo, NY...)
-- modo 12h/24h
-- cronômetro com milissegundos
-- alarme simples com beep
-- partículas e estrelas no background (pausam quando a aba tá oculta)
-- animação flip nos dígitos
-- efeito glitch no título
-- responsivo e funciona como PWA
-- swipe no mobile
+O PulseView começou como um estudo de lógica e evoluiu para uma aplicação web completa (PWA). Ele combina um visual neon moderno com ferramentas essenciais: cronômetro, alarme e conversor de fusos.
+
+> **Destaque:** Arquitetura refatorada para usar `requestAnimationFrame` (60fps) e persistência de estado via `localStorage`.
 
 ---
 
-## stack
+## ✨ Funcionalidades
 
-- HTML5
-- CSS3 (variáveis, animações, glassmorphism)
-- JavaScript puro (sem jQuery, sem nada)
+- **🕒 Relógio Multi-Modo:** Escolha entre visual **Neon**, **Cards** ou **Minimalista**.
+- **🎨 Temas Dinâmicos:** 5 variações de cores (Purple, Cyan, Red, Green Matrix e Minimal).
+- **🌍 Global Ready:** Seletor de fusos horários com ajuste automático de offset.
+- **⏱️ Stopwatch Pro:** Cronômetro com precisão de milissegundos e exportação de tempo.
+- **⏰ Alarme Inteligente:** Notificações via Browser API e feedback visual pulsante.
+- **📱 Mobile First:** Navegação por gestos (swipe) e suporte a PWA (funciona offline).
+- **♿ Acessibilidade:** Suporte a `prefers-reduced-motion` e tags ARIA completas.
 
 ---
 
-## rodando local
+## 🛠️ Tecnologias & Conceitos
+
+- **HTML5 Semântico:** SEO e acessibilidade estrutural.
+- **CSS3 Moderno:** Variáveis CSS, Grid/Flexbox, animações otimizadas e Glassmorphism.
+- **Vanilla JavaScript:** 
+  - `requestAnimationFrame` para performance.
+  - `Intl.DateTimeFormat` para internacionalização.
+  - `Notification API` para alertas em background.
+  - `Service Workers` para suporte offline.
+- **UI/UX:** Design responsivo e sistema de temas escalável.
+
+---
+
+## 🗺️ Roadmap de Melhorias
+
+- [ ] Modo Foco (Pomodoro) integrado.
+- [ ] Múltiplos alarmes nomeáveis.
+- [ ] Personalização de sons de alarme.
+- [ ] Widgets instaláveis para desktop.
+
+---
+
+## 💻 Rodando Local
 
 ```bash
 git clone https://github.com/Belin7z/PulseView.git
 cd PulseView
-# abre o index.html no navegador, só isso
-```
-
-não precisa instalar nada. abre e roda.
-
----
-
-## estrutura
-
-```
-PulseView/
-├── index.html
-├── manifest.json
-├── css/
-│   └── style.css
-└── js/
-    ├── clock.js
-    └── particles.js
+# Abra o index.html no navegador e divirta-se!
 ```
 
 ---
 
-feito por [Belin7z](https://github.com/Belin7z) — projeto de estudo, tá em constante mudança
+Feito com ❤️ por [Belin7z](https://github.com/Belin7z)
