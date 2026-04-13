@@ -147,7 +147,12 @@ const App = {
                 flipEl.classList.remove('flip');
             }, 500);
         } else {
-            el.textContent = val;
+            // Cards: fade out → troca → fade in
+            el.classList.add('changing');
+            setTimeout(() => {
+                el.textContent = val;
+                el.classList.remove('changing');
+            }, 150);
         }
     },
 
