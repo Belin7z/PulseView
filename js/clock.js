@@ -131,17 +131,21 @@ const App = {
             const backEl = document.getElementById(`${id}-back`);
             if (!flipEl || !backEl) { el.textContent = val; return; }
 
-            // Put new value on the back before animation starts
+            // Fix container size to prevent layout shift
+            if (!flipEl.style.width) {
+                flipEl.style.width  = `${flipEl.offsetWidth}px`;
+                flipEl.style.height = `${flipEl.offsetHeight}px`;
+            }
+
             backEl.textContent = val;
             flipEl.classList.remove('flip');
             void flipEl.offsetWidth;
             flipEl.classList.add('flip');
 
-            // After animation, update front and reset
             setTimeout(() => {
                 el.textContent = val;
                 flipEl.classList.remove('flip');
-            }, 600);
+            }, 500);
         } else {
             el.textContent = val;
         }
